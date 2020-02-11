@@ -11,6 +11,7 @@ import router from '@/router';
 import store from '@/store';
 import {AppModule} from '@/store/modules/app';
 import i18n from '@/lang';
+import '@/icons/components';
 import '@/permission';
 import '@/utils/error-log';
 import * as directives from '@/directives';
