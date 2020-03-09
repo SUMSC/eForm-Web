@@ -1,8 +1,10 @@
 export default {
   route: {
-    dashboard: '首页',
+    dashboard: '我的问卷',
     documentation: '文档',
-    guide: '引导页',
+    guide: '创建问卷',
+    excel: '从Excel中生成问卷',
+    editor: '编辑问卷',
     permission: '权限测试页',
     rolePermission: '角色权限',
     pagePermission: '页面权限',
@@ -50,7 +52,6 @@ export default {
     page401: '401',
     page404: '404',
     errorLog: '错误日志',
-    excel: 'Excel',
     exportExcel: '导出 Excel',
     selectExcel: '导出 已选择项',
     mergeHeader: '导出 多级表头',
@@ -107,35 +108,6 @@ export default {
     backToTopTips2: '可自定义按钮的样式、show/hide、出现的高度、返回的位置 如需文字提示，可在外部使用Element的el-tooltip元素',
     imageUploadTips: '由于我在使用时它只有vue@1版本，而且和mockjs不兼容，所以自己改造了一下，如果大家要使用的话，优先还是使用官方版本。'
   },
-  table: {
-    dynamicTips1: '固定表头, 按照表头顺序排序',
-    dynamicTips2: '不固定表头, 按照点击顺序排序',
-    dragTips1: '默认顺序',
-    dragTips2: '拖拽后顺序',
-    title: '标题',
-    importance: '重要性',
-    type: '类型',
-    remark: '点评',
-    search: '搜索',
-    add: '添加',
-    export: '导出',
-    reviewer: '审核人',
-    id: '序号',
-    date: '时间',
-    author: '作者',
-    readings: '阅读数',
-    status: '状态',
-    actions: '操作',
-    edit: '编辑',
-    publish: '发布',
-    draft: '草稿',
-    delete: '删除',
-    cancel: '取 消',
-    confirm: '确 定'
-  },
-  example: {
-    warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'
-  },
   errorLog: {
     tips: '请点击右上角bug小图标',
     description: '现在的管理后台基本都是spa的形式了，它增强了用户体验，但同时也会增加页面出问题的可能性，可能一个小小的疏忽就导致整个页面的死锁。好在 Vue 官网提供了一个方法来捕获处理异常，你可以在其中进行错误处理或者异常上报。',
@@ -146,23 +118,10 @@ export default {
     selectedExport: '导出已选择项',
     placeholder: '请输入文件名(默认excel-list)'
   },
-  zip: {
-    export: '导出',
-    placeholder: '请输入文件名(默认file)'
-  },
-  pdf: {
-    tips: '这里使用 window.print() 来实现下载pdf的功能'
-  },
   theme: {
     change: '换肤',
     documentation: '换肤文档',
     tips: 'Tips: 它区别于 navbar 上的 theme-pick, 是两种不同的换肤方法，各自有不同的应用场景，具体请参考文档。'
-  },
-  tagsView: {
-    refresh: '刷新',
-    close: '关闭',
-    closeOthers: '关闭其它',
-    closeAll: '关闭所有'
   },
   settings: {
     title: '系统布局配置',
@@ -171,5 +130,25 @@ export default {
     showSidebarLogo: '显示侧边栏 Logo',
     fixedHeader: '固定 Header',
     sidebarTextTheme: '侧边栏文字主题色'
+  },
+  qnaire: {
+    name: '问卷名',
+    deadline: '截止时间',
+    active: '当前状态',
+    create_time: '创建时间',
+    answer: '回收量',
+    type: '问卷类型',
+    save: '保存问卷',
+    append: '添加问题'
+  },
+  question: {
+    'plain-text': '文本描述',
+    input: '单行文本题',
+    select: '单项选择题',
+    checkbox: '多项选择题',
+    textarea: '多行文本题',
+    'date-picker': '日期选择题',
+    'area-picker': '地域选择题',
+    'file-uploader': '附件题',
   }
 }

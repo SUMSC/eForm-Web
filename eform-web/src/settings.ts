@@ -13,10 +13,10 @@ interface ISettings {
 // You can customize below settings :)
 const settings: ISettings = {
   title: 'eForm Web',
-  showSettings: true,
+  showSettings: false,
   showTagsView: true,
   fixedHeader: false,
-  showSidebarLogo: false,
+  showSidebarLogo: true,
   errorLog: ['production'],
   sidebarTextTheme: true,
   devServerPort: 9527,

@@ -66,7 +66,7 @@
     name: 'Page401',
   })
   export default class extends Vue {
-    private errGif = errGif + '?' + +new Date();
+    private errGif = errGif + '?' + new Date();
     private ewizardClap = 'https://wpimg.wallstcn.com/007ef517-bafd-4066-aae4-6883632d9646';
     private dialogVisible = false;
 

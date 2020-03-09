@@ -42,7 +42,7 @@
   export default class extends Vue {
     @Prop({ required: true }) private collapse!: boolean
 
-    private title = 'Vue Typescript Admin'
+    private title = 'eForm 问卷'
   }
 </script>
 

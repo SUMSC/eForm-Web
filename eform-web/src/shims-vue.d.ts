@@ -11,3 +11,7 @@ declare module 'element-ui/lib/locale/lang/*' {
 declare module '*.gif' {
   export const gif: any
 }
+
+declare module '*.png' {
+  export const png: any
+}

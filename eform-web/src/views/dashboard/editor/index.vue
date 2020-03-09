@@ -1,17 +1,22 @@
 <template>
   <div class="dashboard-editor-container">
-    <div class="clearfix">
-      <div class="info-container">
-        <span class="display_name">{{ name }}</span>
-        <span style="font-size:20px;padding-top:20px;display:inline-block;">Editor's Dashboard</span>
-      </div>
-    </div>
-    <div>
-      <img
-        :src="emptyGif"
-        class="emptyGif"
-      >
-    </div>
+    <el-row>
+      <el-col :span="8">
+        <div class="grid-content bg-purple">
+
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="grid-content bg-purple-light">
+
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="grid-content bg-purple">
+
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -40,6 +45,28 @@
 </script>
 
 <style lang="scss" scoped>
+  .el-col {
+    border-radius: 4px;
+  }
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }
+
+
   .emptyGif {
     display: block;
     width: 45%;

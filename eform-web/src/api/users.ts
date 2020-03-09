@@ -1,54 +1,69 @@
-import request from '@/utils/request';
+import {loginService, service} from '@/utils/request';
+import * as crypto from 'crypto';
+
+const hashSeed = (secret: string, method: string) =>
+  crypto.createHash(method).update(secret).digest('hex');
+
+export const login = async (data: { username: string, password: string }) =>
+  loginService({
+    url: '/',
+    method: 'post',
+    data: {
+      id: data.username,
+      token: hashSeed(data.password, 'md5'),
+    },
+    responseType: 'json'
+  });
+
+export const logout = () =>
+  loginService({
+    url: '/logout',
+    method: 'post',
+  });
+
+export const getMyModel = (model: string, params: any = {}) =>
+  service({
+    url: `/my/${model}`,
+    method: 'get',
+    params
+  });
 
 export const getUsers = (params: any) =>
-  request({
+  service({
     url: '/users',
     method: 'get',
     params
   });
 
-export const getUserInfo = (data: any) =>
-  request({
-    url: '/users/info',
-    method: 'post',
-    data
+export const getUserInfo = (params: any = {}) =>
+  service({
+    url: '/user',
+    method: 'get',
+    params
   });
 
 export const getUserByName = (username: string) =>
-  request({
+  service({
     url: `/users/${username}`,
     method: 'get'
   });
 
 export const updateUser = (username: string, data: any) =>
-  request({
+  service({
     url: `/users/${username}`,
     method: 'put',
     data
   });
 
 export const deleteUser = (username: string) =>
-  request({
+  service({
     url: `/users/${username}`,
-    method: 'delete'
+    method: 'delete',
   });
 
-export const login = (data: any) =>
-  request({
-    url: '/users/login',
-    method: 'post',
-    data
-  });
-
-export const logout = () =>
-  request({
-    url: '/users/logout',
-    method: 'post'
-  });
-
-export const register = (data: any) =>
-  request({
-    url: '/users/register',
-    method: 'post',
-    data
-  });
+// export const register = (data: any) =>
+//   request({
+//     url: '/users/register',
+//     method: 'post',
+//     data
+//   });

@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-  import pathToRegexp from 'path-to-regexp';
+  import * as pathToRegexp from 'path-to-regexp';
   import {Component, Vue, Watch} from 'vue-property-decorator'
   import {Route, RouteRecord} from 'vue-router'
 
@@ -30,7 +30,7 @@
     name: 'Breadcrumb'
   })
   export default class extends Vue {
-    private breadcrumbs: RouteRecord[] = []
+    private breadcrumbs: RouteRecord[] = [];
 
     @Watch('$route')
     private onRouteChange(route: Route) {
@@ -46,8 +46,8 @@
     }
 
     private getBreadcrumb() {
-      let matched = this.$route.matched.filter((item) => item.meta && item.meta.title)
-      const first = matched[0]
+      let matched = this.$route.matched.filter((item) => item.meta && item.meta.title);
+      const first = matched[0];
       if (!this.isDashboard(first)) {
         matched = [{ path: '/dashboard', meta: { title: 'dashboard' } } as RouteRecord].concat(matched)
       }
@@ -57,7 +57,7 @@
     }
 
     private isDashboard(route: RouteRecord) {
-      const name = route && route.name
+      const name = route && route.name;
       if (!name) {
         return false
       }
@@ -66,15 +66,15 @@
 
     private pathCompile(path: string) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
-      const { params } = this.$route
+      const { params } = this.$route;
       const toPath = pathToRegexp.compile(path);
       return toPath(params)
     }
 
     private handleLink(item: any) {
-      const { redirect, path } = item
+      const { redirect, path } = item;
       if (redirect) {
-        this.$router.push(redirect)
+        this.$router.push(redirect);
         return
       }
       this.$router.push(this.pathCompile(path))

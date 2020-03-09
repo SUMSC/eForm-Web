@@ -170,6 +170,6 @@ export default {
     showTagsView: 'Open Tags-View',
     showSidebarLogo: 'Sidebar Logo',
     fixedHeader: 'Fixed Header',
-    sidebarTextTheme: 'Sidebar Text Theme'
+    sidebarTextTheme: 'Sidebar PlainText Theme'
   }
 }

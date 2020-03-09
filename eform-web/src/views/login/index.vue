@@ -128,8 +128,8 @@ export default class extends Vue {
   };
 
   private loginForm = {
-    username: 'admin',
-    password: '111111',
+    username: '1627406048',
+    password: 'zh980728xl',
   };
 
   private loginRules = {
@@ -185,11 +185,13 @@ export default class extends Vue {
         this.$router.push({
           path: this.redirect || '/',
           query: this.otherQuery,
+        }).then(() => {
+          this.loading = false;
         });
         // Just to simulate the time of the request
-        setTimeout(() => {
-          this.loading = false;
-        }, 0.5 * 1000);
+        // setTimeout(() => {
+        //   this.loading = false;
+        // }, 0.5 * 1000);
         return true;
       }
       return false;

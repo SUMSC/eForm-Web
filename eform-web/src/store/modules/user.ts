@@ -1,32 +1,43 @@
 import {Action, getModule, Module, Mutation, VuexModule} from 'vuex-module-decorators';
-import {getUserInfo, login, logout} from '@/api/users';
+import {getMyModel, getUserInfo, login, logout} from '@/api/users';
+import {IAnswerModel, IQnaireModel} from '@/api/types';
 import {getToken, removeToken, setToken} from '@/utils/cookies';
 import router, {resetRouter} from '@/router';
 import {PermissionModule} from './permission';
-// import { TagsViewModule } from './tags-view';
 import store from '@/store';
+import {GeneralResponse} from '@/utils/request';
 
+// UserModule
 export interface IUserState {
   token: string
   name: string
   avatar: string
-  introduction: string
   roles: string[]
-  email: string
+  myQnaire: IQnaireModel[]
+  myAnaire: IQnaireModel[]
+  myAnswer: IAnswerModel[]
 }
 
 @Module({ dynamic: true, store, name: 'user' })
 class User extends VuexModule implements IUserState {
   public token = getToken() || '';
+  public id_tag = '';
   public name = '';
-  public avatar = '';
-  public introduction = '';
+  public usertype = '';
+  public avatar = 'https://pic2.zhimg.com/v2-54e6163ce5132707169d316a2b77b48c_xl.jpg';
   public roles: string[] = [];
-  public email = '';
+  public myAnaire: IQnaireModel[] = [];
+  public myQnaire: IQnaireModel[] = [];
+  public myAnswer: IAnswerModel[] = [];
 
   @Mutation
   private SET_TOKEN(token: string) {
     this.token = token
+  }
+
+  @Mutation
+  private SET_ID_TAG(id_tag: string) {
+    this.id_tag = id_tag
   }
 
   @Mutation
@@ -35,13 +46,28 @@ class User extends VuexModule implements IUserState {
   }
 
   @Mutation
-  private SET_AVATAR(avatar: string) {
-    this.avatar = avatar
+  private SET_USERTYPE(usertype: string) {
+    this.usertype = usertype
   }
 
   @Mutation
-  private SET_INTRODUCTION(introduction: string) {
-    this.introduction = introduction
+  private SET_MY_QNAIRE(myQnaire: any[]) {
+    this.myQnaire = myQnaire
+  }
+
+  @Mutation
+  private SET_MY_ANAIRE(myAnaire: any[]) {
+    this.myAnaire = myAnaire
+  }
+
+  @Mutation
+  private SET_MY_ANSWER(myAnswer: any[]) {
+    this.myAnswer = myAnswer
+  }
+
+  @Mutation
+  private SET_AVATAR(avatar: string) {
+    this.avatar = avatar
   }
 
   @Mutation
@@ -49,18 +75,13 @@ class User extends VuexModule implements IUserState {
     this.roles = roles
   }
 
-  @Mutation
-  private SET_EMAIL(email: string) {
-    this.email = email
-  }
-
   @Action
   public async Login(userInfo: { username: string, password: string}) {
     let { username, password } = userInfo;
     username = username.trim();
-    const { data } = await login({ username, password });
-    setToken(data.accessToken);
-    this.SET_TOKEN(data.accessToken)
+    const { message } = <GeneralResponse>await login({ username, password });
+    setToken(message);
+    this.SET_TOKEN(message);
   }
 
   @Action
@@ -75,20 +96,34 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    const { data } = await getUserInfo({ /* Your params here */ });
-    if (!data) {
+    const { message } = <GeneralResponse>await getUserInfo();
+    if (!message) {
       throw Error('Verification failed, please Login again.')
     }
-    const { roles, name, avatar, introduction, email } = data.user;
+    const { id_tag, name, type, my_answer } = message;
     // roles must be a non-empty array
-    if (!roles || roles.length <= 0) {
-      throw Error('GetUserInfo: roles must be a non-null array!')
-    }
-    this.SET_ROLES(roles);
+    // if (!roles || roles.length <= 0) {
+    //   throw Error('GetUserInfo: roles must be a non-null array!')
+    // }
+    this.SET_ROLES(['admin']);
+    this.SET_ID_TAG(id_tag);
     this.SET_NAME(name);
-    this.SET_AVATAR(avatar);
-    this.SET_INTRODUCTION(introduction);
-    this.SET_EMAIL(email)
+    this.SET_USERTYPE(type);
+    this.SET_MY_ANSWER(my_answer);
+    // this.SET_AVATAR(avatar);
+  }
+
+  @Action
+  public async GetUserQnaire() {
+    if (this.token === '') {
+      throw Error('GetUserInfo: token is undefined!')
+    }
+    const { message } = <GeneralResponse>await getMyModel('all');
+    if (!message) {
+      throw Error('Verification failed, please Login again.')
+    }
+    this.SET_MY_ANAIRE(message.anaire);
+    this.SET_MY_QNAIRE(message.qnaire);
   }
 
   @Action

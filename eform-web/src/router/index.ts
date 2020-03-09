@@ -98,23 +98,49 @@ export const constantRoutes: RouteConfig[] = [
   //     }
   //   ]
   // },
-  // {
-  //   path: '/guide',
-  //   component: Layout,
-  //   redirect: '/guide/index',
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import(/* webpackChunkName: "guide" */ '@/views/guide/index.vue'),
-  //       name: 'Guide',
-  //       meta: {
-  //         title: 'guide',
-  //         icon: 'guide',
-  //         noCache: true
-  //       }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/guide',
+    component: Layout,
+    redirect: '/guide/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import(/* webpackChunkName: "guide" */ '@/views/guide/index.vue'),
+        name: 'Guide',
+        meta: {
+          title: 'guide',
+          icon: 'guide',
+          noCache: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/import',
+    component: Layout,
+    redirect: '/import/editor',
+    children: [
+      {
+        path: 'editor',
+        component: () => import('@/views/import/editor.vue'),
+        name: 'Editor',
+        meta: {
+          title: 'editor',
+          noCache: false
+        }
+      },
+      {
+        path: 'excel',
+        component: () => import('@/views/import/excel.vue'),
+        name: 'Excel',
+        meta: {
+          title: 'excel',
+          noCache: true
+        }
+      }
+    ],
+    meta: { hidden: true }
+  }
   // {
   //   path: '/profile',
   //   component: Layout,
