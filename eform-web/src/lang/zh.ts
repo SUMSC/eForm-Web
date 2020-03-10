@@ -138,15 +138,16 @@ export default {
     create_time: '创建时间',
     answer: '回收量',
     type: '问卷类型',
-    save: '保存问卷',
-    append: '添加问题'
+    save: '保存',
+    append: '添加问题',
+    sort: '排序'
   },
   question: {
     'plain-text': '文本描述',
-    input: '单行文本题',
-    select: '单项选择题',
-    checkbox: '多项选择题',
-    textarea: '多行文本题',
+    'qnaire-input': '单行文本题',
+    'qnaire-select': '单项选择题',
+    'qnaire-checkbox': '多项选择题',
+    'qnaire-textarea': '多行文本题',
     'date-picker': '日期选择题',
     'area-picker': '地域选择题',
     'file-uploader': '附件题',

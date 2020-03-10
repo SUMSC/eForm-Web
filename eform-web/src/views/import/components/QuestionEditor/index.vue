@@ -5,15 +5,14 @@
       :is="type"
       :name="name"
       :edit="edit"
-      :meta="meta"
       :id="id"
       @edit="handleEdit"
       @checked="$emit('checked')"
     />
     <div class="op-menu">
       <span @click="handleEdit"><i :class="{ 'edit-btn': true, 'el-icon-edit-outline': !edit, 'el-icon-check': edit }" /></span>
-      <span v-show="isNativeType"><i class="copy-btn el-icon-copy-document" /></span>
-      <span v-show="isNativeType"><i class="delete-btn el-icon-delete" /></span>
+      <span v-show="isNativeType" @click="handleDuplicate"><i class="copy-btn el-icon-copy-document" /></span>
+      <span v-show="isNativeType" @click="handleDelete"><i class="delete-btn el-icon-delete" /></span>
     </div>
   </div>
 </template>
@@ -24,6 +23,11 @@
   import Description from '@/components/QnaireDescription/index.vue';
   import {QnaireModule} from "@/store/modules/qnaire";
   import PlainText from '@/components/PlainText/index.vue';
+  import QnaireInput from '@/components/QnaireInput/index.vue';
+  import QnaireSelect from '@/components/QnaireSelect/index.vue';
+  import QnaireTextarea from '@/components/QnaireTextarea/index.vue';
+  import * as _ from 'lodash';
+  import {Message} from "element-ui";
 
   @Component({
     name: 'QuestionEditor',
@@ -31,13 +35,14 @@
       'qnaire-title': Title,
       'qnaire-description': Description,
       'plain-text': PlainText,
+      'qnaire-input': QnaireInput,
+      'qnaire-select': QnaireSelect,
+      'qnaire-textarea': QnaireTextarea,
     },
   })
   export default class extends Vue {
     @Prop(String) readonly name!: string;
     @Prop(String) readonly type!: string;
-    @Prop(String) readonly description!: string;
-    @Prop(Object) readonly meta!: any;
     @Prop(Number) readonly id!: number;
 
     get isNativeType() {
@@ -57,13 +62,29 @@
       }
     }
 
+    handleDelete() {
+      QnaireModule.SET_FORM(QnaireModule.form.filter(i => i.id !== this.id));
+      if (QnaireModule.editing === String(this.id))
+        QnaireModule.SET_EDITING('');
+    }
+
+    handleDuplicate() {
+      if (QnaireModule.editing !== '') {
+        Message.warning('请先完成当前问题的编辑。');
+        return
+      }
+      const copy = _.cloneDeep(QnaireModule.form[this.id - 1]);
+      copy.id = QnaireModule.form.length + 1;
+      QnaireModule.SET_FORM(QnaireModule.form.concat([copy]));
+    }
+
     check() {
       const qel : any = this.$refs.question;
-      return qel.check();
+      qel.check();
     }
 
     mounted() {
-      console.log(this.name, this.type, this.description, this.meta, this.id);
+      console.log(this.name, this.type, this.id);
     }
   }
 </script>

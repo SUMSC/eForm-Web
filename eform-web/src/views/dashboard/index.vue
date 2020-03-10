@@ -127,7 +127,8 @@
       this.$router.push({
         path: '/import/editor',
         query: {
-          qnaireId: row.id
+          id: row.id,
+          type: row.type,
         }
       })
     }

@@ -12,13 +12,12 @@
 <script lang="ts">
   import {Component, Mixins} from "vue-property-decorator";
   import {QnaireModule} from "@/store/modules/qnaire";
-  import {QuestionComponent} from "@/mixins";
+  import {QuestionHeader} from "@/mixins";
 
   @Component({
     name: 'QnaireTitle',
-    mixins: [QuestionComponent],
   })
-  export default class extends Mixins(QuestionComponent) {
+  export default class extends Mixins(QuestionHeader) {
     private rules = {
       name: [
         { required: true, message: '请输入问卷标题', trigger: 'blur' },

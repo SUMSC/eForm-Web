@@ -1,6 +1,6 @@
 <template>
   <div class="text-block">
-    <p v-if="!edit">{{name}}</p>
+    <p v-if="!edit">{{text}}</p>
     <el-form ref="form" :model="form" :rules="rules" :inline="true" v-else>
       <el-form-item prop="name">
         <el-input
@@ -8,6 +8,7 @@
           type="textarea" :autosize="{ minRows: 1 }"
           v-model="text"
           maxlength="200"
+          placeholder="这里可以写一些文本描述"
         />
       </el-form-item>
     </el-form>
@@ -39,7 +40,7 @@
       QnaireModule.SET_FORM(temp);
     }
     mounted() {
-      console.log();
+      console.log(this);
     }
   }
 </script>

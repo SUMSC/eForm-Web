@@ -10,16 +10,27 @@ export const newQnaire = async (type: boolean, data: any) =>
     data
   });
 
-export const getQnaireById = async (id: number) =>
+export const getQnaireById = async (id: number, type: boolean) =>
   service({
     url: '/qnaire',
     method: 'GET',
     params: {
-      id
+      id,
+      a: type
     }
   });
 
-export const deleteQnaire = async (id: number, type: string) =>
+export const updateQnaire = async (type: boolean, data: any) =>
+  service({
+    url: '/qnaire',
+    method: 'PUT',
+    params: {
+      a: type,
+    },
+    data
+  });
+
+export const deleteQnaire = async (id: number, type: boolean) =>
   service({
     url: '/qnaire',
     method: 'DELETE',

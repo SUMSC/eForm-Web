@@ -5,7 +5,11 @@
         <div class="editor-img"></div>
         <p class="entry-title">创建空白问卷</p>
         <p class="entry-detail">使用可视化编辑器编辑问卷</p>
-        <el-button class="start-btn" @click="newQnaire('editor')">开始</el-button>
+        <el-button-group>
+          <el-button class="start-btn" @click="newQnaire('editor', 'false')">实名问卷</el-button>
+          <el-button class="start-btn" @click="newQnaire('editor', 'true')">匿名问卷</el-button>
+        </el-button-group>
+
       </div>
     </el-col>
     <el-col :span="12">
@@ -27,12 +31,12 @@
     name: 'Guide',
   })
   export default class extends Vue {
-    private guidePic = guidePic;
-    newQnaire(to: string) {
+    newQnaire(to: string, type: string = 'false') {
       this.$router.push({
         path: '/import/' + to,
         query: {
-          qnaireId: 'new'
+          id: 'new',
+          type
         }
       })
     }

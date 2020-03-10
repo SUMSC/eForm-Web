@@ -1,7 +1,7 @@
 import {IFormModel} from "@/api/types";
 import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decorators";
 import store from '@/store';
-import {getQnaireById, newQnaire} from "@/api/qnaire";
+import {getQnaireById, newQnaire, updateQnaire} from "@/api/qnaire";
 import {GeneralResponse} from "@/utils/request";
 import {UserModule} from "@/store/modules/user";
 
@@ -43,13 +43,18 @@ class Qnaire extends VuexModule implements IQnaireState {
   }
 
   @Mutation
+  public SET_TYPE(value: boolean) {
+    this.type = value;
+  }
+
+  @Mutation
   public SET_EDITING(value: string) {
     this.editing = value;
   }
 
   @Action
   public async GetQnaire() {
-    const res = (<GeneralResponse>await getQnaireById(this.id)).message[0];
+    const res = (<GeneralResponse>await getQnaireById(this.id, this.type)).message[0];
     this.SET_NAME(res.name);
     this.SET_DESCRIPTION(res.description);
     this.SET_FORM(res.form);
@@ -65,6 +70,16 @@ class Qnaire extends VuexModule implements IQnaireState {
       form: this.form,
     });
     this.SET_ID(res.message);
+  }
+
+  @Action
+  public async SaveQnaire() {
+    const res = <GeneralResponse>await updateQnaire(this.type, {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      form: this.form,
+    });
   }
 }
 

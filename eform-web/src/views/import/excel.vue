@@ -54,7 +54,6 @@
       }
     }
     handleSuccess(res: any, file: any, fileList: any) {
-      // TODO: get response from /upload/excel
       console.log(res);
       Message.success('问卷生成成功！');
       this.newQnaireId = res.message;

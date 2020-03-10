@@ -21,10 +21,7 @@
           :key="form.id"
           :ref="form.id"
           :id="form.id"
-          :name="form.name"
-          :description="form.description"
           :type="form.type"
-          :meta="form.meta"
           @edit="handleEdit($event)"
           @checked="handleChecked"
         />
@@ -33,8 +30,11 @@
     <el-col :span="5" :lg="4">
       <Sticky>
         <div class="question-component-list">
-          <div class="list-item save-btn" ><i class="el-icon-upload2"></i> {{ $t('qnaire.save') }}</div>
-          <el-divider></el-divider>
+          <el-button-group class="list-actions">
+            <el-button type="primary" @click="handleSave">{{ $t('qnaire.save') }}</el-button>
+            <el-button type="primary">{{ $t('qnaire.sort') }}</el-button>
+          </el-button-group>
+          <el-divider class="list-divider"></el-divider>
             <div class="list-item list-title" ><i class="el-icon-star-on"></i> {{ $t('qnaire.append') }}</div>
             <div class="list-item" v-for="component in components" @click="handleAppend(component)">{{ $t('question.' + component) }}</div>
         </div>
@@ -60,18 +60,21 @@
   })
   export default class extends Vue {
     private components = [
-      'plain-text',
-      'select',
-      'checkbox',
-      'input',
-      'textarea',
+      'qnaire-select',
+      'qnaire-checkbox',
+      'qnaire-input',
+      'qnaire-textarea',
       'area-picker',
       'date-picker',
-      'file-uploader'
+      'file-uploader',
+      'plain-text',
     ];
     private nextEditing: string = '';
     get qnaireId() {
-      return this.$route.query.qnaireId;
+      return this.$route.query.id;
+    }
+    get qnaireType() {
+      return this.$route.query.type;
     }
     get qnaire() {
       return QnaireModule;
@@ -105,11 +108,16 @@
           meta: {}
         };
         QnaireModule.SET_FORM(QnaireModule.form.concat([newForm]));
+        QnaireModule.SET_EDITING(String(newId));
       } else {
         Message.warning('请先完成当前问题的编辑。')
       }
     }
+    handleSave() {
+      QnaireModule.SaveQnaire();
+    }
     mounted() {
+      QnaireModule.SET_TYPE(JSON.parse(<string>this.qnaireType));
       if (this.qnaireId && this.qnaireId !== 'new') {
         QnaireModule.SET_ID(parseInt(<string>this.qnaireId));
         QnaireModule.GetQnaire();
@@ -135,16 +143,22 @@
     margin: 0;
     max-width: 800px;
   }
+  .list-actions {
+    margin-left: 1.5em;
+  }
+  .list-divider {
+    margin: 20px 0;
+  }
   .question-component-list {
     width: 100%;
     /*min-height: calc(100vh - 91px);*/
-    height: 51vh;
     background-color: #fafafa;
     border-left: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
     display: flex;
     flex-direction: column;
     padding-top: 1em;
+    padding-bottom: 1em;
   }
   .list-item {
     border: 1px solid #e0e0e0;
@@ -171,13 +185,13 @@
   }
   .list-title {
     cursor: default;
-    background-color: #409eff;
+    background-color: #ecf5ff;
     margin-bottom: 1.5em;
     text-align-last: center;
-    color: white;
+    color: #669eff;
     border-radius: 10px;
   }
   .list-title:hover {
-    color: white;
+    color: #669eff;
   }
 </style>
