@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-col :span="19" :lg="20">
+    <el-col :span="19" :lg="20" :xl="21">
       <div class="editor-preview">
         <QuestionEditor
           ref="qnaire-title"
@@ -27,16 +27,38 @@
         />
       </div>
     </el-col>
-    <el-col :span="5" :lg="4">
+    <el-col :span="5" :lg="4" :xl="3">
       <Sticky>
         <div class="question-component-list">
-          <el-button-group class="list-actions">
-            <el-button type="primary" @click="handleSave">{{ $t('qnaire.save') }}</el-button>
-            <el-button type="primary">{{ $t('qnaire.sort') }}</el-button>
-          </el-button-group>
+          <div class="action-group">
+            <el-button-group>
+              <el-button
+                type="primary"
+                icon="el-icon-upload2"
+                @click="handleSave"
+                @mouseover.native="hoverSave = true"
+                @mouseleave.native="hoverSave = false"
+              >{{hoverSave?this.$t('qnaire.save'):''}}</el-button>
+              <el-button
+                type="primary"
+                icon="el-icon-sort"
+                @click="handleSort"
+                @mouseover.native="hoverSort = true"
+                @mouseleave.native="hoverSort = false"
+              >{{hoverSort?this.$t('qnaire.sort'):''}}</el-button>
+            </el-button-group>
+          </div>
           <el-divider class="list-divider"></el-divider>
-            <div class="list-item list-title" ><i class="el-icon-star-on"></i> {{ $t('qnaire.append') }}</div>
+          <el-row type="flex" justify="center">
+            <el-col :span="22">
+              <div class="list-item list-title" ><i class="el-icon-star-on"></i> {{ $t('qnaire.append') }}</div>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="center">
+            <el-col :span="22">
             <div class="list-item" v-for="component in components" @click="handleAppend(component)">{{ $t('question.' + component) }}</div>
+            </el-col>
+          </el-row>
         </div>
       </Sticky>
     </el-col>
@@ -50,6 +72,8 @@
   import Sticky from '@/components/Sticky/index.vue';
   import {IFormModel} from "@/api/types";
   import {Message} from "element-ui";
+  import _ from 'lodash';
+  import {questionComponents} from "@/utils";
 
   @Component({
     name: 'QnaireEditor',
@@ -59,17 +83,9 @@
     }
   })
   export default class extends Vue {
-    private components = [
-      'qnaire-select',
-      'qnaire-checkbox',
-      'qnaire-input',
-      'qnaire-textarea',
-      'area-picker',
-      'date-picker',
-      'file-uploader',
-      'plain-text',
-    ];
     private nextEditing: string = '';
+    private hoverSave = false;
+    private hoverSort = false;
     get qnaireId() {
       return this.$route.query.id;
     }
@@ -78,6 +94,12 @@
     }
     get qnaire() {
       return QnaireModule;
+    }
+    get components() {
+      return questionComponents;
+    }
+    handleSort() {
+      console.log('sort');
     }
     handleEdit(id: string) {
       if (QnaireModule.editing === '')
@@ -98,15 +120,22 @@
         QnaireModule.SET_EDITING(this.nextEditing);
     }
     handleAppend(component: string) {
-      const newId = QnaireModule.form.length + 1;
+      const newId = _.last(QnaireModule.form)!.id + 1;
       if (QnaireModule.editing === '') {
         const newForm: IFormModel = {
           id: newId,
           name: '',
           description: '',
           type: component,
-          meta: {}
+          meta: {},
+          required: false,
         };
+        if (newForm.type === 'qnaire-select' || newForm.type === 'qnaire-checkbox') {
+          newForm.meta.selection = [
+            { value: 'A' },
+            { value: 'B' }
+          ]
+        }
         QnaireModule.SET_FORM(QnaireModule.form.concat([newForm]));
         QnaireModule.SET_EDITING(String(newId));
       } else {
@@ -132,6 +161,11 @@
 </script>
 
 <style lang="scss">
+  .action-group {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
   .editor-preview {
     width: 100%;
     display: flex;
@@ -142,9 +176,6 @@
   .editor-item {
     margin: 0;
     max-width: 800px;
-  }
-  .list-actions {
-    margin-left: 1.5em;
   }
   .list-divider {
     margin: 20px 0;

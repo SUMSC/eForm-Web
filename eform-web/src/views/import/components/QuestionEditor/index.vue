@@ -96,7 +96,6 @@
     min-width: 50em;
     width: 60vw;
     display: flex;
-    justify-content: center;
     position: relative;
     min-height: 50px;
   }

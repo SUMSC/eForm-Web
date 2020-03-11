@@ -48,6 +48,7 @@ export interface IFormModel {
   name: string
   description?: string
   type: string
+  required: boolean
   meta?: any
 }
 

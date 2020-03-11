@@ -82,3 +82,14 @@ export const toggleClass = (ele: HTMLElement, className: string) => {
   }
   ele.className = classString
 };
+
+export const questionComponents = [
+  'qnaire-select',
+  'qnaire-checkbox',
+  'qnaire-input',
+  'qnaire-textarea',
+  'area-picker',
+  'date-picker',
+  'file-uploader',
+  'plain-text',
+];

@@ -22,3 +22,7 @@ export const uppercaseFirstChar = (str: string) => {
 export const dateNormalFormat = (str: string) => {
   return moment(str).format('YYYY-MM-DD')
 };
+
+export const radioValue = (i: number) => {
+  return String.fromCharCode(65+i);
+};

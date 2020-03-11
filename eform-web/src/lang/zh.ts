@@ -151,5 +151,9 @@ export default {
     'date-picker': '日期选择题',
     'area-picker': '地域选择题',
     'file-uploader': '附件题',
+    select: {
+      add: '添加',
+      delete: '删除'
+    }
   }
 }
