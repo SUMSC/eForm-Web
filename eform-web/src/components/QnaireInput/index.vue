@@ -2,7 +2,7 @@
   <div v-if="!edit" class="q-container">
     <p class="q-title">{{questionNumber}}. {{name}} <span class="q-required" v-if="required">*</span></p>
     <p class="q-description">{{description}}</p>
-    <el-input class="" disabled></el-input>
+    <el-input disabled></el-input>
   </div>
   <div v-else style="width: 100%">
     <el-form ref="form" :model="form" :rules="rules" class="input-form">

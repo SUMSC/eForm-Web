@@ -33,6 +33,7 @@
           <div class="action-group">
             <el-button-group>
               <el-button
+                class="editor-btn"
                 type="primary"
                 icon="el-icon-upload2"
                 @click="handleSave"
@@ -40,6 +41,7 @@
                 @mouseleave.native="hoverSave = false"
               >{{hoverSave?this.$t('qnaire.save'):''}}</el-button>
               <el-button
+                class="editor-btn"
                 type="primary"
                 icon="el-icon-sort"
                 @click="handleSort"
@@ -120,7 +122,8 @@
         QnaireModule.SET_EDITING(this.nextEditing);
     }
     handleAppend(component: string) {
-      const newId = _.last(QnaireModule.form)!.id + 1;
+      const lastQuestion = _.last(QnaireModule.form);
+      const newId = lastQuestion? lastQuestion.id + 1 : 1;
       if (QnaireModule.editing === '') {
         const newForm: IFormModel = {
           id: newId,
@@ -146,11 +149,14 @@
       QnaireModule.SaveQnaire();
     }
     mounted() {
-      QnaireModule.SET_TYPE(JSON.parse(<string>this.qnaireType));
-      if (this.qnaireId && this.qnaireId !== 'new') {
+      if (!this.qnaireId) {
+        this.$router.push('/guide');
+      } else if (this.qnaireId !== 'new') {
+        QnaireModule.SET_TYPE(JSON.parse(<string>this.qnaireType));
         QnaireModule.SET_ID(parseInt(<string>this.qnaireId));
         QnaireModule.GetQnaire();
       } else {
+        QnaireModule.SET_TYPE(JSON.parse(<string>this.qnaireType));
         QnaireModule.SET_NAME('问卷标题');
         QnaireModule.SET_DESCRIPTION('这里可以写一些问卷简介。');
         QnaireModule.SET_FORM([]);
@@ -224,5 +230,12 @@
   }
   .list-title:hover {
     color: #669eff;
+  }
+  .editor-btn {
+    transition: width .2s ease;
+    width: 61px;
+  }
+  .editor-btn:hover {
+    width: 89px;
   }
 </style>

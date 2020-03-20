@@ -46,3 +46,9 @@ export const getQnaireExcelTemplate = () => {
 };
 
 export const uploadURL = '/api/import/excel';
+
+
+export const getChinaArea = () =>
+  service({
+    url: '/china_area',
+  });

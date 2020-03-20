@@ -22,10 +22,10 @@ module.exports = {
     proxy: {
       // change xxx-api/login => /mock-api/v1/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
-      '/api': {
+      '/': {
         target: `http://localhost:8002`,
         changeOrigin: true, // needed for virtual hosted sites
-      }
+      },
     }
   },
   // pwa: {
@@ -53,9 +53,8 @@ module.exports = {
     config
       .when(process.env.NODE_ENV === 'development',
         config => config.devtool('cheap-eval-source-map')
-      );
-
-    // remove vue-cli-service's progress output
+     );
+    // remove vue-cli-service's progress output[
     config.plugins.delete('progress');
     // replace with another progress output plugin to solve the this bug:
     // https://github.com/vuejs/vue-cli/issues/4557

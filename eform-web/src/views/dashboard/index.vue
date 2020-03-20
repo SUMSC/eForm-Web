@@ -20,7 +20,7 @@
       >
         <template slot-scope="scope">
           <el-tag
-            :type="scope.row.active? 'success' : 'primary'"
+            :type="scope.row.type? 'success' : 'primary'"
             disable-transitions>{{scope.row.type?'匿名问卷':'实名问卷'}}</el-tag>
         </template>
       </el-table-column>
@@ -76,7 +76,11 @@
             <el-button icon="el-icon-more" circle @click.stop></el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>
-                <el-button type="text" @click.stop="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button type="text" v-if="!scope.row.active" @click.stop="handleOpen(scope.row)">开始回收</el-button>
+                <el-button type="text" v-else @click.stop="handleClose(scope.row)">暂停回收</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <el-button type="text" @click.stop="handleEdit(scope.row)">编辑</el-button>
               </el-dropdown-item>
               <el-dropdown-item>
                 <el-button type="text" @click.stop="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -87,8 +91,47 @@
       </el-table-column>
     </el-table>
     <el-drawer
-      :title="formTitle"
+      :title="currentQnaire.name"
       :visible.sync="detailDrawer">
+      <el-row class="drawer-row" type="flex" justify="space-around">
+        <el-col :md="12" :lg="8">
+          <span class="drawer-header">问卷 ID</span>
+        </el-col>
+        <el-col :md="6" :lg="4">
+          <span class="drawer-data">{{formID}}</span>
+        </el-col>
+      </el-row>
+      <el-row class="drawer-row" type="flex" justify="space-around">
+        <el-col :md="12" :lg="8">
+          <span class="drawer-header">题目数量</span>
+        </el-col>
+        <el-col :md="6" :lg="4">
+          <span class="drawer-data">{{currentQnaire.form.length}}</span>
+        </el-col>
+      </el-row>
+      <el-row class="drawer-row" type="flex" justify="space-around">
+        <el-col :md="12" :lg="8">
+          <span class="drawer-header">问卷状态</span>
+        </el-col>
+        <el-col :md="6" :lg="4">
+          <span class="drawer-data">
+            {{currentQnaire.active?'回收中':'未发布'}}
+          </span>
+        </el-col>
+      </el-row>
+      <el-row type="flex" justify="space-around">
+        <el-col :span="24">
+          <div class="drawer-actions">
+            <el-button-group>
+              <el-button type="primary">统计</el-button>
+              <el-button type="primary" @click="handleEdit({id: formID, type: formType})">编辑</el-button>
+              <el-button v-if="!currentQnaire.active" type="primary" @click="handleOpen({id: formID, type: formType})">开始回收</el-button>
+              <el-button v-else type="primary" @click="handleClose({id: formID, type: formType})">暂停回收</el-button>
+            </el-button-group>
+          </div>
+        </el-col>
+      </el-row>
+
     </el-drawer>
   </div>
 </template>
@@ -96,9 +139,10 @@
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
   import {UserModule} from '@/store/modules/user';
-  import {deleteQnaire} from "@/api/qnaire";
+  import {deleteQnaire, updateQnaire} from "@/api/qnaire";
   import {concat} from 'lodash';
   import {Message} from "element-ui";
+  import _ from 'lodash';
 
   @Component({
     name: 'Dashboard',
@@ -106,8 +150,15 @@
   export default class extends Vue {
     private listLoading = false;
     private detailDrawer = false;
-    private formTitle = '';
+    private formType = false;
+    private formID = 0;
     private updateTable = true;
+    get currentQnaire() {
+      if (this.formID !== 0)
+        return _.find(this.allQnaire, { id: this.formID, type: this.formType });
+      else
+        return { name: null, form: [] };
+    }
     get allQnaire() {
       return concat(
         UserModule.myAnaire.map( i => ({...i, type: true})),
@@ -121,14 +172,14 @@
     }
     openDetailDrawer(row: any, column: any, event: any) {
       this.detailDrawer = true;
-      this.formTitle = row.name;
+      this.formID = row.id;
+      this.formType = row.type;
     }
-    handleEdit(index: number, row: any) {
+    handleEdit({id, type}: any) {
       this.$router.push({
         path: '/import/editor',
         query: {
-          id: row.id,
-          type: row.type,
+          id, type
         }
       })
     }
@@ -145,11 +196,45 @@
           console.log(err.response.data.message);
         });
       });
-
+    }
+    handleOpen({id, type}: any) {
+      updateQnaire(type, { id, active: true }).then(res => {
+        Message.success('问卷已经开始回收了');
+        UserModule.GetUserQnaire();
+      });
+    }
+    handleClose({id, type}: any) {
+      updateQnaire(type, { id, active: false }).then(res => {
+        Message.success('问卷已经停止回收了');
+        UserModule.GetUserQnaire();
+      });
     }
     mounted() {
       // console.log(process.env);
-      UserModule.GetUserQnaire();
+      UserModule.GetUserQnaire().then(() => {
+        this.formID = this.allQnaire[0].id;
+        this.formType = this.allQnaire[0].type;
+      });
     }
   }
 </script>
+
+<style scoped lang="scss">
+  .drawer-header {
+    color: #909399;
+  }
+  .drawer-data {
+    color: #303133;
+    display: flex;
+    justify-content: center;
+  }
+  .drawer-row {
+    margin: 0 20px 15px 20px;
+    border-bottom: 1px solid #e1e7f2;
+    padding-bottom: 15px;
+  }
+  .drawer-actions {
+    display: flex;
+    justify-content: center;
+  }
+</style>

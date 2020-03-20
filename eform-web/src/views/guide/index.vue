@@ -2,19 +2,18 @@
   <el-row>
     <el-col :span="12">
       <div class="grid-content visual-editor">
-        <div class="editor-img"></div>
+        <img src="@/assets/guide-images/editor.png" alt="blank">
         <p class="entry-title">创建空白问卷</p>
         <p class="entry-detail">使用可视化编辑器编辑问卷</p>
         <el-button-group>
           <el-button class="start-btn" @click="newQnaire('editor', 'false')">实名问卷</el-button>
           <el-button class="start-btn" @click="newQnaire('editor', 'true')">匿名问卷</el-button>
         </el-button-group>
-
       </div>
     </el-col>
     <el-col :span="12">
       <div class="grid-content import-file">
-        <div class="excel-img"></div>
+        <img src="@/assets/guide-images/typer.png" alt="blank">
         <p class="entry-title">使用Excel生成问卷</p>
         <p class="entry-detail">从表格中导入数据，自动生成问卷</p>
         <el-button class="start-btn" @click="newQnaire('excel')">开始</el-button>

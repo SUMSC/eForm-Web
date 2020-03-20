@@ -25,8 +25,12 @@
   import PlainText from '@/components/PlainText/index.vue';
   import QnaireInput from '@/components/QnaireInput/index.vue';
   import QnaireSelect from '@/components/QnaireSelect/index.vue';
+  import QnaireCheckbox from '@/components/QnaireCheckbox/index.vue';
   import QnaireTextarea from '@/components/QnaireTextarea/index.vue';
-  import * as _ from 'lodash';
+  import AreaPicker from '@/components/AreaPicker/index.vue';
+  import DatePicker from '@/components/DatePicker/index.vue';
+  import FileUploader from '@/components/FileUploader/index.vue';
+  import _ from 'lodash';
   import {Message} from "element-ui";
 
   @Component({
@@ -37,7 +41,11 @@
       'plain-text': PlainText,
       'qnaire-input': QnaireInput,
       'qnaire-select': QnaireSelect,
+      'qnaire-checkbox': QnaireCheckbox,
       'qnaire-textarea': QnaireTextarea,
+      'area-picker': AreaPicker,
+      'date-picker': DatePicker,
+      'file-uploader': FileUploader,
     },
   })
   export default class extends Vue {

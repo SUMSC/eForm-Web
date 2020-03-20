@@ -1,9 +1,10 @@
 import {IFormModel} from "@/api/types";
 import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decorators";
 import store from '@/store';
-import {getQnaireById, newQnaire, updateQnaire} from "@/api/qnaire";
+import {getChinaArea, getQnaireById, newQnaire, updateQnaire} from "@/api/qnaire";
 import {GeneralResponse} from "@/utils/request";
 import {UserModule} from "@/store/modules/user";
+import {Message} from "element-ui";
 
 export interface IQnaireState {
   id: number,
@@ -21,6 +22,7 @@ class Qnaire extends VuexModule implements IQnaireState {
   public form: IFormModel[] = [];
   public type: boolean = false;
   public editing: string = '';
+  public chinaArea: any[] = [];
 
   @Mutation
   public SET_ID(value: number) {
@@ -52,6 +54,11 @@ class Qnaire extends VuexModule implements IQnaireState {
     this.editing = value;
   }
 
+  @Mutation
+  public SET_CHINA_AREA(value: any) {
+    this.chinaArea = value;
+  }
+
   @Action
   public async GetQnaire() {
     const res = (<GeneralResponse>await getQnaireById(this.id, this.type)).message[0];
@@ -80,6 +87,18 @@ class Qnaire extends VuexModule implements IQnaireState {
       description: this.description,
       form: this.form,
     });
+    if (res.code !== 200) {
+      Message.error(res.message);
+    }
+  }
+
+  @Action
+  public async GetChinaArea() {
+    if (this.chinaArea.length > 0) return;
+    getChinaArea().then(res => {
+      // console.log(res);
+      this.SET_CHINA_AREA(res);
+    })
   }
 }
 
