@@ -16,7 +16,7 @@ pipeline {
       steps {
         dir(path: './eform-web') {
           sh 'yarn'
-          sh 'yarn build'
+          sh 'yarn build:prod'
         }
 
       }
