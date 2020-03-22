@@ -15,8 +15,8 @@ pipeline {
     stage('构建') {
       steps {
         dir(path: './eform-web') {
-          sh 'yarn & yarn build:prod'
-          sh 'ls dist'
+          sh 'yarn'
+          sh 'yarn build'
         }
 
       }
