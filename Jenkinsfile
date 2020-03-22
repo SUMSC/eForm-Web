@@ -42,7 +42,9 @@ pipeline {
             remoteConfig.user = "${env.REMOTE_USER_NAME}"
             // SSH 私钥文件地址
             remoteConfig.identityFile = privateKeyFilePath
-
+            stage("清除旧文件") {
+                sshCommand remote: remoteConfig, command: "rm -r /home/amber/eform/dist"
+            }
             stage("将构建完成的文件部署到服务器") {
               // 将本地的文件复制到远端
               sshPut(
