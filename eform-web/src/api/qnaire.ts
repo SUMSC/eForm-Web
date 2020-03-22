@@ -1,42 +1,32 @@
 import {service} from "@/utils/request";
 
-export const newQnaire = async (type: boolean, data: any) =>
+export const newQnaire = async (data: any) =>
   service({
     url: '/qnaire',
     method: 'POST',
-    params: {
-      a: type,
-    },
     data
   });
 
-export const getQnaireById = async (id: number, type: boolean) =>
+export const getQnaireById = async (id: number) =>
   service({
     url: '/qnaire',
     method: 'GET',
     params: {
       id,
-      a: type
     }
   });
 
-export const updateQnaire = async (type: boolean, data: any) =>
+export const updateQnaire = async (data: any) =>
   service({
     url: '/qnaire',
     method: 'PUT',
-    params: {
-      a: type,
-    },
     data
   });
 
-export const deleteQnaire = async (id: number, type: boolean) =>
+export const deleteQnaire = async (id: number) =>
   service({
     url: '/qnaire',
     method: 'DELETE',
-    params: {
-      a: type,
-    },
     data: {id}
   });
 

@@ -10,7 +10,7 @@
     <section class="setting-section">
       <div class="deadline-block">
         <el-switch v-model="hasDeadline" active-text="设置问卷结束时间"></el-switch>
-        <el-date-picker v-model="deadline" type="datetime" @change="saveDeadline" :clearable="false"></el-date-picker>
+        <el-date-picker v-if="hasDeadline" v-model="deadline" type="datetime" @change="saveDeadline" :clearable="false"></el-date-picker>
       </div>
       <el-switch v-model="allowEdit" active-text="允许用户修改答案"></el-switch>
     </section>
@@ -29,17 +29,23 @@
     private activeNames = ['1']
     get onlyOnce() { return QnaireModule.settings.only_once }
     set onlyOnce(value: boolean) {
-      QnaireModule.UPDATE_SETTINGS('only_once', value)
+      QnaireModule.UPDATE_SETTINGS({
+        key: 'only_once', value
+      })
       QnaireModule.SaveSetting()
     }
     get allowEdit() { return QnaireModule.settings.allow_edit }
     set allowEdit(value: boolean) {
-      QnaireModule.UPDATE_SETTINGS('allow_edit', value)
+      QnaireModule.UPDATE_SETTINGS({
+        key: 'allow_edit', value
+      })
       QnaireModule.SaveSetting()
     }
     get shuffleSelections() { return QnaireModule.settings.shuffle_selections }
     set shuffleSelections(value: boolean) {
-      QnaireModule.UPDATE_SETTINGS('shuffle_selections', value)
+      QnaireModule.UPDATE_SETTINGS({
+        key: 'shuffle_selections', value
+      })
       QnaireModule.SaveSetting()
     }
     get qnaireType() {
@@ -47,6 +53,7 @@
     }
     set qnaireType(value: boolean) {
       QnaireModule.SET_TYPE(!value)
+      QnaireModule.ChangeType()
     }
     get hasDeadline() {
       return !!QnaireModule.deadline
@@ -99,6 +106,7 @@
     }
   }
   .deadline-block {
+    width: 20em;
     display: flex;
     flex-direction: column;
     .el-switch {

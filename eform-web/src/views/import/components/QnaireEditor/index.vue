@@ -156,7 +156,6 @@
       if (!this.qnaireId) {
         this.$router.push('/guide');
       } else if (this.qnaireId !== 'new') {
-        QnaireModule.SET_TYPE(JSON.parse(<string>this.qnaireType));
         QnaireModule.SET_ID(parseInt(<string>this.qnaireId));
         QnaireModule.GetQnaire();
       } else {

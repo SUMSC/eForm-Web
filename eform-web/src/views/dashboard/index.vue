@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <el-table
       v-loading="listLoading"
-      :data="allQnaire"
+      :data="qnaire"
       style="width: 100%"
       @row-click="openDetailDrawer"
       v-if="updateTable"
@@ -20,8 +20,8 @@
       >
         <template slot-scope="scope">
           <el-tag
-            :type="scope.row.type? 'success' : 'primary'"
-            disable-transitions>{{scope.row.type?'匿名问卷':'实名问卷'}}</el-tag>
+            :type="scope.row.a? 'success' : 'primary'"
+            disable-transitions>{{scope.row.a?'匿名问卷':'实名问卷'}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -151,10 +151,9 @@
   import {Component, Vue} from 'vue-property-decorator';
   import {UserModule} from '@/store/modules/user';
   import {deleteQnaire, updateQnaire} from "@/api/qnaire";
-  import _, {concat} from 'lodash';
+  import _ from 'lodash';
   import {Message} from "element-ui";
   import {copyToClipBoard} from '@/utils'
-  import {IQnaireModel} from "@/api/types";
 
   @Component({
     name: 'Dashboard',
@@ -167,17 +166,12 @@
     private updateTable = true;
     get currentQnaire() {
       if (this.formID !== 0)
-        return _.find(this.allQnaire, { id: this.formID, type: this.formType });
+        return _.find(this.qnaire, { id: this.formID });
       else
         return { name: null, form: [] };
     }
-    get allQnaire() {
-      return concat(
-        UserModule.myAnaire.map( i => ({...i, type: true})),
-        UserModule.myQnaire.map( i => ({...i, type: false}))
-      ).sort((a: IQnaireModel, b: IQnaireModel) => {
-        return b.id - a.id
-      })
+    get qnaire() {
+      return UserModule.myQnaire;
     }
     get getWjUrl() {
       return process.env['VUE_APP_BASE_API'] + '/wj/' + this.formID + '?a=' + (this.formType ? '1' : '0')
@@ -192,11 +186,11 @@
       this.formID = row.id;
       this.formType = row.type;
     }
-    handleEdit({id, type}: any) {
+    handleEdit({ id }: any) {
       this.$router.push({
         path: '/import/editor',
         query: {
-          id, type
+          id
         }
       })
     }
@@ -206,7 +200,7 @@
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteQnaire(row.id, row.type).then(res => {
+        deleteQnaire(row.id).then(res => {
           Message.success('删除成功');
           UserModule.GetUserQnaire();
         }).catch(err => {
@@ -214,14 +208,15 @@
         });
       });
     }
-    handleOpen({id, type}: any) {
-      updateQnaire(type, { id, active: true }).then(res => {
+    // TODO: GetUserQnaire 改为直接修改 UserModule 中的问卷数据
+    handleOpen({ id }: any) {
+      updateQnaire({ id, active: true }).then(res => {
         Message.success('问卷已经开始回收了');
         UserModule.GetUserQnaire();
       });
     }
-    handleClose({id, type}: any) {
-      updateQnaire(type, { id, active: false }).then(res => {
+    handleClose({ id }: any) {
+      updateQnaire({ id, active: false }).then(res => {
         Message.success('问卷已经停止回收了');
         UserModule.GetUserQnaire();
       });
@@ -234,12 +229,7 @@
     }
     mounted() {
       // console.log(process.env);
-      UserModule.GetUserQnaire().then(() => {
-        if (this.allQnaire.length > 0) {
-          this.formID = this.allQnaire[0].id;
-          this.formType = this.allQnaire[0].type;
-        }
-      });
+      UserModule.GetUserQnaire()
     }
   }
 </script>

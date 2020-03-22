@@ -38,6 +38,7 @@ export interface IQnaireModel {
   form: IFormModel[]
   answer?: IAnswerModel[]
   settings?: IQnaireSettingsModel
+  a: boolean
 }
 
 export interface IAnswerModel {

@@ -140,25 +140,24 @@ export const constantRoutes: RouteConfig[] = [
       }
     ],
     meta: { hidden: true }
+  },
+  {
+    path: '/statistics',
+    component: Layout,
+    redirect: '/statistics/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/statistics/index.vue'),
+        name: '数据统计',
+        meta: {
+          title: 'statistics',
+          icon: 'tree-table',
+          noCache: true
+        }
+      }
+    ]
   }
-  // {
-  //   path: '/profile',
-  //   component: Layout,
-  //   redirect: '/profile/index',
-  //   meta: { hidden: true },
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import(/* webpackChunkName: "profile" */ '@/views/profile/index.vue'),
-  //       name: 'Profile',
-  //       meta: {
-  //         title: 'profile',
-  //         icon: 'user',
-  //         noCache: true
-  //       }
-  //     }
-  //   ]
-  // }
 ];
 
 /**

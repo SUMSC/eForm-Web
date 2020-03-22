@@ -24,7 +24,6 @@
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
-  import guidePic from '@/assets/guide-images/sprites_bg.png';
 
   @Component({
     name: 'Guide',

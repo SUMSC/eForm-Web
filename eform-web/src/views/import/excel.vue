@@ -79,7 +79,7 @@
       this.$router.push({
         path: '/import/editor',
         query: {
-          qnaireId: this.newQnaireId
+          id: this.newQnaireId
         },
       })
     }

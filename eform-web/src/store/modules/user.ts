@@ -5,16 +5,16 @@ import {getToken, removeToken, setToken} from '@/utils/cookies';
 import router, {resetRouter} from '@/router';
 import {PermissionModule} from './permission';
 import store from '@/store';
-import {GeneralResponse} from '@/utils/request';
+import _ from 'lodash';
 
 // UserModule
 export interface IUserState {
   token: string
   name: string
+  id_tag: string
   avatar: string
   roles: string[]
   myQnaire: IQnaireModel[]
-  myAnaire: IQnaireModel[]
   myAnswer: IAnswerModel[]
 }
 
@@ -26,53 +26,58 @@ class User extends VuexModule implements IUserState {
   public usertype = '';
   public avatar = 'https://pic2.zhimg.com/v2-54e6163ce5132707169d316a2b77b48c_xl.jpg';
   public roles: string[] = [];
-  public myAnaire: IQnaireModel[] = [];
   public myQnaire: IQnaireModel[] = [];
   public myAnswer: IAnswerModel[] = [];
+  public qnairePages: number = 1;
 
   @Mutation
-  private SET_TOKEN(token: string) {
+  public SET_TOKEN(token: string) {
     this.token = token
   }
 
   @Mutation
-  private SET_ID_TAG(id_tag: string) {
+  public SET_ID_TAG(id_tag: string) {
     this.id_tag = id_tag
   }
 
   @Mutation
-  private SET_NAME(name: string) {
+  public SET_NAME(name: string) {
     this.name = name
   }
 
   @Mutation
-  private SET_USERTYPE(usertype: string) {
+  public SET_USERTYPE(usertype: string) {
     this.usertype = usertype
   }
 
   @Mutation
-  private SET_MY_QNAIRE(myQnaire: any[]) {
+  public SET_MY_QNAIRE(myQnaire: any[]) {
     this.myQnaire = myQnaire
   }
 
   @Mutation
-  private SET_MY_ANAIRE(myAnaire: any[]) {
-    this.myAnaire = myAnaire
-  }
-
-  @Mutation
-  private SET_MY_ANSWER(myAnswer: any[]) {
+  public SET_MY_ANSWER(myAnswer: any[]) {
     this.myAnswer = myAnswer
   }
 
   @Mutation
-  private SET_AVATAR(avatar: string) {
+  public SET_AVATAR(avatar: string) {
     this.avatar = avatar
   }
 
   @Mutation
-  private SET_ROLES(roles: string[]) {
+  public SET_ROLES(roles: string[]) {
     this.roles = roles
+  }
+
+  @Mutation
+  public SET_QNAIRE_PAGES(value: number) {
+    this.qnairePages = value
+  }
+
+  @Mutation
+  public POP_QNAIRE(value: any) {
+    this.myQnaire.splice(_.findIndex(value), 1)
   }
 
   @Action
@@ -97,20 +102,21 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    const { message } = <GeneralResponse>await getUserInfo();
-    if (!message) {
-      throw Error('Verification failed, please Login again.')
-    }
-    const { id_tag, name, type, my_answer } = message;
-    // roles must be a non-empty array
-    // if (!roles || roles.length <= 0) {
-    //   throw Error('GetUserInfo: roles must be a non-null array!')
-    // }
-    this.SET_ROLES(['admin']);
-    this.SET_ID_TAG(id_tag);
-    this.SET_NAME(name);
-    this.SET_USERTYPE(type);
-    this.SET_MY_ANSWER(my_answer);
+    return getUserInfo().then(({ message } : any) => {
+      if (!message) {
+        throw Error('Verification failed, please Login again.')
+      }
+      const { id_tag, name, type, my_answer } = message;
+      // roles must be a non-empty array
+      // if (!roles || roles.length <= 0) {
+      //   throw Error('GetUserInfo: roles must be a non-null array!')
+      // }
+      this.SET_ROLES(['admin']);
+      this.SET_ID_TAG(id_tag);
+      this.SET_NAME(name);
+      this.SET_USERTYPE(type);
+      this.SET_MY_ANSWER(my_answer);
+    })
     // this.SET_AVATAR(avatar);
   }
 
@@ -119,12 +125,12 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    return getMyModel('all').then(({ message }: any) => {
+    return getMyModel('qnaire', { sort: 'id' }).then(({ message }: any) => {
       if (!message) {
         throw Error('Verification failed, please Login again.')
       }
-      this.SET_MY_ANAIRE(message.anaire);
       this.SET_MY_QNAIRE(message.qnaire);
+      this.SET_QNAIRE_PAGES(message.page_num);
     })
   }
 

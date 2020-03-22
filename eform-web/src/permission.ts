@@ -21,7 +21,7 @@ const getPageTitle = (key: string) => {
   return `${settings.title}`;
 };
 
-router.beforeEach(async(to: Route, _: Route, next: any) => {
+router.beforeEach(async (to: Route, _: Route, next: any) => {
   // Start progress bar
   NProgress.start();
   // Determine whether the user has logged in
@@ -33,9 +33,7 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
     } else {
       // Check whether the user has obtained his permission roles
       if (UserModule.roles.length === 0) {
-        try {
-          // Note: roles must be a object array! such as: ['admin'] or ['developer', 'editor']
-          await UserModule.GetUserInfo();
+        UserModule.GetUserInfo().then(() => {
           const roles = UserModule.roles;
           // Generate accessible routes map based on role
           PermissionModule.GenerateRoutes(roles);
@@ -44,13 +42,13 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
           // Hack: ensure addRoutes is complete
           // Set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
-        } catch (err) {
-          // Remove token and redirect to login page
+        }).catch(err => {
+          console.log(err)
           UserModule.ResetToken();
           Message.error(err || 'Has Error');
           next(`/login?redirect=${to.path}`);
           NProgress.done()
-        }
+        })
       } else {
         next()
       }

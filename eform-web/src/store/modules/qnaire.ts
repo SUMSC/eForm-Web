@@ -3,6 +3,7 @@ import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decor
 import store from '@/store';
 import {getChinaArea, getQnaireById, newQnaire, updateQnaire} from "@/api/qnaire";
 import {UserModule} from "@/store/modules/user";
+import {Vue} from "vue-property-decorator";
 
 export interface IQnaireState {
   id: number,
@@ -71,15 +72,14 @@ class Qnaire extends VuexModule implements IQnaireState {
   }
 
   @Mutation
-  public UPDATE_SETTINGS(key: string, value: boolean) {
-    // @ts-ignore
-    this.settings[key] = value
+  public UPDATE_SETTINGS({ key, value }: { key: string, value: boolean }) {
+    Vue.set(this.settings, key, value)
   }
 
   @Mutation
   public INIT_SETTINGS() {
     this.settings = {
-      only_once: false,
+      only_once: true,
       shuffle_selections: false,
       allow_edit: false
     }
@@ -92,8 +92,9 @@ class Qnaire extends VuexModule implements IQnaireState {
 
   @Action
   public async GetQnaire() {
-    return getQnaireById(this.id, this.type).then(({ message } : any) => {
+    return getQnaireById(this.id).then(({ message } : any) => {
       const res = message[0]
+      this.SET_TYPE(res.a)
       this.SET_DEADLINE(res.deadline)
       this.SET_NAME(res.name);
       this.SET_DESCRIPTION(res.description);
@@ -104,13 +105,14 @@ class Qnaire extends VuexModule implements IQnaireState {
 
   @Action
   public async NewQnaire() {
-    return newQnaire(this.type, {
+    return newQnaire({
       name: this.name,
       description: this.description,
       active: false,
       owner_id: UserModule.id_tag,
       form: this.form,
-      settings: this.settings
+      settings: this.settings,
+      a: this.type
     }).then(({ message }: any) => {
       this.SET_ID(message)
     });
@@ -118,7 +120,7 @@ class Qnaire extends VuexModule implements IQnaireState {
 
   @Action
   public async SaveQnaire() {
-    return updateQnaire(this.type, {
+    return updateQnaire({
       id: this.id,
       name: this.name,
       description: this.description,
@@ -128,7 +130,7 @@ class Qnaire extends VuexModule implements IQnaireState {
 
   @Action
   public async SaveSetting() {
-    return updateQnaire(this.type, {
+    return updateQnaire({
       id: this.id,
       settings: this.settings
     })
@@ -136,7 +138,7 @@ class Qnaire extends VuexModule implements IQnaireState {
 
   @Action
   public SaveDeadline() {
-    return updateQnaire(this.type, {
+    return updateQnaire({
       id: this.id,
       deadline: this.deadline
     })
@@ -145,9 +147,17 @@ class Qnaire extends VuexModule implements IQnaireState {
   @Action
   public async GetChinaArea() {
     if (this.chinaArea.length > 0) return;
-    getChinaArea().then(res => {
+    return getChinaArea().then(res => {
       // console.log(res);
       this.SET_CHINA_AREA(res);
+    })
+  }
+
+  @Action
+  public async ChangeType() {
+    return updateQnaire({
+      id: this.id,
+      a: this.type
     })
   }
 }
