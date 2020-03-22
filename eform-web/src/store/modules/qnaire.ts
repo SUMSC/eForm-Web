@@ -1,10 +1,8 @@
-import {IFormModel} from "@/api/types";
+import {IFormModel, IQnaireSettingsModel} from "@/api/types";
 import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decorators";
 import store from '@/store';
 import {getChinaArea, getQnaireById, newQnaire, updateQnaire} from "@/api/qnaire";
-import {GeneralResponse} from "@/utils/request";
 import {UserModule} from "@/store/modules/user";
-import {Message} from "element-ui";
 
 export interface IQnaireState {
   id: number,
@@ -12,6 +10,8 @@ export interface IQnaireState {
   description: string,
   form: IFormModel[],
   type: boolean,
+  settings: IQnaireSettingsModel
+  deadline: string | null
 }
 
 @Module({ dynamic: true,  store, name: 'qnaire'})
@@ -23,6 +23,12 @@ class Qnaire extends VuexModule implements IQnaireState {
   public type: boolean = false;
   public editing: string = '';
   public chinaArea: any[] = [];
+  public settings: IQnaireSettingsModel = {
+    only_once: false,
+    shuffle_selections: false,
+    allow_edit: false
+  }
+  public deadline: string = ''
 
   @Mutation
   public SET_ID(value: number) {
@@ -59,37 +65,81 @@ class Qnaire extends VuexModule implements IQnaireState {
     this.chinaArea = value;
   }
 
+  @Mutation
+  public SET_SETTINGS(value: IQnaireSettingsModel) {
+    this.settings = value
+  }
+
+  @Mutation
+  public UPDATE_SETTINGS(key: string, value: boolean) {
+    // @ts-ignore
+    this.settings[key] = value
+  }
+
+  @Mutation
+  public INIT_SETTINGS() {
+    this.settings = {
+      only_once: false,
+      shuffle_selections: false,
+      allow_edit: false
+    }
+  }
+
+  @Mutation
+  public SET_DEADLINE(value: any) {
+    this.deadline = value
+  }
+
   @Action
   public async GetQnaire() {
-    const res = (<GeneralResponse>await getQnaireById(this.id, this.type)).message[0];
-    this.SET_NAME(res.name);
-    this.SET_DESCRIPTION(res.description);
-    this.SET_FORM(res.form);
+    return getQnaireById(this.id, this.type).then(({ message } : any) => {
+      const res = message[0]
+      this.SET_DEADLINE(res.deadline)
+      this.SET_NAME(res.name);
+      this.SET_DESCRIPTION(res.description);
+      this.SET_FORM(res.form);
+      this.SET_SETTINGS(res.settings)
+    });
   }
 
   @Action
   public async NewQnaire() {
-    const res = <GeneralResponse>await newQnaire(this.type, {
+    return newQnaire(this.type, {
       name: this.name,
       description: this.description,
       active: false,
       owner_id: UserModule.id_tag,
       form: this.form,
+      settings: this.settings
+    }).then(({ message }: any) => {
+      this.SET_ID(message)
     });
-    this.SET_ID(res.message);
   }
 
   @Action
   public async SaveQnaire() {
-    const res = <GeneralResponse>await updateQnaire(this.type, {
+    return updateQnaire(this.type, {
       id: this.id,
       name: this.name,
       description: this.description,
       form: this.form,
     });
-    if (res.code !== 200) {
-      Message.error(res.message);
-    }
+  }
+
+  @Action
+  public async SaveSetting() {
+    return updateQnaire(this.type, {
+      id: this.id,
+      settings: this.settings
+    })
+  }
+
+  @Action
+  public SaveDeadline() {
+    return updateQnaire(this.type, {
+      id: this.id,
+      deadline: this.deadline
+    })
   }
 
   @Action

@@ -51,7 +51,7 @@
     }
 
     .description-input {
-      width: 45em;
+      width: 50vw;
     }
   }
 </style>

@@ -1,5 +1,5 @@
 import {Action, getModule, Module, Mutation, VuexModule} from 'vuex-module-decorators';
-import {getMyModel, getUserInfo, login, logout} from '@/api/users';
+import {getMyModel, getUserInfo, login} from '@/api/users';
 import {IAnswerModel, IQnaireModel} from '@/api/types';
 import {getToken, removeToken, setToken} from '@/utils/cookies';
 import router, {resetRouter} from '@/router';
@@ -79,9 +79,10 @@ class User extends VuexModule implements IUserState {
   public async Login(userInfo: { username: string, password: string}) {
     let { username, password } = userInfo;
     username = username.trim();
-    const { message } = <GeneralResponse>await login({ username, password });
-    setToken(message);
-    this.SET_TOKEN(message);
+    return login({ username, password }).then(({ message }: any) => {
+      setToken(message);
+      this.SET_TOKEN(message);
+    })
   }
 
   @Action
@@ -118,12 +119,13 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    const { message } = <GeneralResponse>await getMyModel('all');
-    if (!message) {
-      throw Error('Verification failed, please Login again.')
-    }
-    this.SET_MY_ANAIRE(message.anaire);
-    this.SET_MY_QNAIRE(message.qnaire);
+    return getMyModel('all').then(({ message }: any) => {
+      if (!message) {
+        throw Error('Verification failed, please Login again.')
+      }
+      this.SET_MY_ANAIRE(message.anaire);
+      this.SET_MY_QNAIRE(message.qnaire);
+    })
   }
 
   @Action
@@ -147,7 +149,6 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('LogOut: token is undefined!')
     }
-    await logout();
     removeToken();
     resetRouter();
 

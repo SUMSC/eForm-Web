@@ -146,7 +146,11 @@
       }
     }
     handleSave() {
-      QnaireModule.SaveQnaire();
+      QnaireModule.SaveQnaire().then(() => {
+        this.$message.success('保存成功')
+      }).catch((err) => {
+        this.$message.error('保存失败，可能网络不太好')
+      })
     }
     mounted() {
       if (!this.qnaireId) {
@@ -160,6 +164,7 @@
         QnaireModule.SET_NAME('问卷标题');
         QnaireModule.SET_DESCRIPTION('这里可以写一些问卷简介。');
         QnaireModule.SET_FORM([]);
+        QnaireModule.INIT_SETTINGS();
         QnaireModule.NewQnaire();
       }
     }

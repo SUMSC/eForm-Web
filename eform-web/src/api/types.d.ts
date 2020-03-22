@@ -20,6 +20,12 @@ export interface IUserModel {
   my_answer?: IAnswerModel[]
 }
 
+export interface IQnaireSettingsModel {
+  only_once: boolean
+  shuffle_selections: boolean
+  allow_edit: boolean
+}
+
 export interface IQnaireModel {
   id: number
   name: string
@@ -31,6 +37,7 @@ export interface IQnaireModel {
   owner: IUserModel
   form: IFormModel[]
   answer?: IAnswerModel[]
+  settings?: IQnaireSettingsModel
 }
 
 export interface IAnswerModel {

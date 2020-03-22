@@ -113,9 +113,10 @@
       AppModule.ToggleSideBar(false)
     }
 
-    private async logout() {
-      await UserModule.LogOut();
-      await this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    private logout() {
+      UserModule.LogOut().then(() => {
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      })
     }
   }
 </script>

@@ -1,11 +1,11 @@
 <template>
-  <div :class="{ 'question-block': true, 'more-action': isNativeType, 'highlight': edit }">
+  <div :class="{'question-block': true, 'more-action': isNativeType, 'highlight': edit}">
     <component
-      ref="question"
       :is="type"
+      ref="question"
+      :id="id"
       :name="name"
       :edit="edit"
-      :id="id"
       @edit="handleEdit"
       @checked="$emit('checked')"
     />
@@ -101,7 +101,7 @@
   .question-block {
     padding: 1px calc(1em + 1px);
     max-width: 1000px;
-    min-width: 50em;
+    min-width: 30em;
     width: 60vw;
     display: flex;
     position: relative;
