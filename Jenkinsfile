@@ -14,7 +14,11 @@ pipeline {
     }
     stage('构建') {
       steps {
-        sh 'ls'
+        dir(path: './eform-web') {
+          sh 'yarn & yarn build:prod'
+          sh 'ls dist'
+        }
+
       }
     }
   }
