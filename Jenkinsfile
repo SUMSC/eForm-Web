@@ -19,7 +19,7 @@ pipeline {
         sh 'npm install'
         sh 'npm run build:prod'
         echo '构建完成'
-        sh 'ls'
+        sh 'ls dist'
       }
   }
 }
