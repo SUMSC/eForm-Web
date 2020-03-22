@@ -32,8 +32,6 @@ pipeline {
           remoteConfig.allowAnyHosts = true
           remoteConfig.port = 12450
           remoteConfig.user = "amber"
-          // 使用 SCP 作为文件传输
-          remoteConfig.fileTransfer = "SCP"
           withCredentials([sshUserPrivateKey(
             credentialsId: "${env.QCLOUD_CREDENTIALS_ID}",
             keyFileVariable: "privateKeyFilePath"
@@ -43,8 +41,10 @@ pipeline {
             // SSH 私钥文件地址
             remoteConfig.identityFile = privateKeyFilePath
             stage("清除旧文件") {
-                sshCommand remote: remoteConfig, command: "rm -r /home/amber/eform/dist"
+              sshCommand remote: remoteConfig, command: "rm -r /home/amber/eform/dist"
             }
+            // 使用 SCP 作为文件传输
+            remoteConfig.fileTransfer = "SCP"
             stage("将构建完成的文件部署到服务器") {
               // 将本地的文件复制到远端
               sshPut(
