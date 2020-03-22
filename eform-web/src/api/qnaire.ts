@@ -40,9 +40,8 @@ export const deleteQnaire = async (id: number, type: boolean) =>
     data: {id}
   });
 
-
 export const getQnaireExcelTemplate = () => {
-  window.open('http://localhost:8002/files/qnaire_excel_template.xlsx');
+  window.open('/files/qnaire_excel_template.xlsx');
 };
 
 export const uploadURL = '/api/import/excel';

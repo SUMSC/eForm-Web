@@ -59,37 +59,7 @@
       >
         {{ $t('login.logIn') }}
       </el-button>
-
-      <div style="position:relative">
-        <div class="tips">
-          <span>{{ $t('login.username') }} : admin </span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }} </span>
-        </div>
-        <div class="tips">
-          <span>{{ $t('login.username') }} : editor </span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }} </span>
-        </div>
-
-        <el-button
-          class="thirdparty-button"
-          type="primary"
-          @click="showDialog=true"
-        >
-          {{ $t('login.thirdparty') }}
-        </el-button>
-      </div>
     </el-form>
-
-    <el-dialog
-      :title="$t('login.thirdparty')"
-      :visible.sync="showDialog"
-    >
-      {{ $t('login.thirdpartyTips') }}
-<!--      <br>-->
-<!--      <br>-->
-<!--      <br>-->
-<!--      <social-sign />-->
-    </el-dialog>
   </div>
 </template>
 
@@ -141,8 +111,6 @@ export default class extends Vue {
 
   private loading = false;
 
-  private showDialog = false;
-
   private redirect?: string;
 
   private otherQuery: Dictionary<string> = {};
@@ -181,13 +149,17 @@ export default class extends Vue {
     (this.$refs.loginForm as ElForm).validate(async(valid: boolean) => {
       if (valid) {
         this.loading = true;
-        await UserModule.Login(this.loginForm);
-        this.$router.push({
-          path: this.redirect || '/',
-          query: this.otherQuery,
-        }).then(() => {
+        UserModule.Login(this.loginForm).then(() => {
+          this.$router.push({
+            path: this.redirect || '/',
+            query: this.otherQuery,
+          }).then(() => {
+            this.loading = false;
+          });
+        }).catch(err => {
+          this.$message.error('登陆失败，可能是网络问题')
           this.loading = false;
-        });
+        })
         // Just to simulate the time of the request
         // setTimeout(() => {
         //   this.loading = false;

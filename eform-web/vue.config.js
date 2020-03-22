@@ -8,7 +8,7 @@ const mockServerPort = 9528; // TODO: get this variable from setting.ts
 const name = 'eForm 问卷'; // TODO: get this variable from setting.ts
 
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/vue-typescript-admin-template/' : '/',
+  publicPath: '/',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
@@ -22,10 +22,14 @@ module.exports = {
     proxy: {
       // change xxx-api/login => /mock-api/v1/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
-      '/': {
+      '/api': {
         target: `http://localhost:8002`,
         changeOrigin: true, // needed for virtual hosted sites
       },
+      '/login': {
+        target: `https://eform.wzhzzmzzy.xyz`,
+        changeOrigin: true,
+      }
     }
   },
   // pwa: {

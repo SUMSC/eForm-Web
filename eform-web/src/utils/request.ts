@@ -8,7 +8,7 @@ export interface GeneralResponse extends AxiosResponse {
 }
 
 export const service = axios.create({
-  baseURL: process.env.NODE_ENV === 'development' ? process.env.VUE_APP_DEV_API : process.env.VUE_APP_BASE_API,
+  baseURL: process.env.VUE_APP_RESOURCE_API,
   timeout: 5000,
   // withCredentials: true // send cookies when cross-domain requests
 });
@@ -78,24 +78,9 @@ loginService.interceptors.response.use(
   (response) => {
     // general response:
     // { code: 200/201/204/400, message: ... }
-    const res = response.data;
-    if (res.code >= 400) {
-      Message({
-        message: res.message || '登陆失败，请检查用户名密码是否正确',
-        type: 'error',
-        duration: 8 * 1000,
-      });
-      return Promise.reject(new Error(res.message || '登陆失败，请检查用户名密码是否正确'))
-    } else {
-      return response.data
-    }
+    return response.data
   },
   (error) => {
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    });
     return Promise.reject(error)
   }
 );

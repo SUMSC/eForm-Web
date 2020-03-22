@@ -119,6 +119,17 @@
           </span>
         </el-col>
       </el-row>
+      <el-row class="drawer-row" type="flex" justify="space-around">
+        <el-col :md="12" :lg="8" style="display: flex; align-items: center">
+          <span class="drawer-header">问卷链接</span>
+        </el-col>
+        <el-col :md="6" :lg="4">
+          <span class="drawer-data">
+            <el-button type="text" @click="handleOpenLink(getWjUrl)">预览</el-button>
+            <el-button type="text" @click="handleCopyLink(getWjUrl)">复制链接</el-button>
+          </span>
+        </el-col>
+      </el-row>
       <el-row type="flex" justify="space-around">
         <el-col :span="24">
           <div class="drawer-actions">
@@ -140,9 +151,10 @@
   import {Component, Vue} from 'vue-property-decorator';
   import {UserModule} from '@/store/modules/user';
   import {deleteQnaire, updateQnaire} from "@/api/qnaire";
-  import {concat} from 'lodash';
+  import _, {concat} from 'lodash';
   import {Message} from "element-ui";
-  import _ from 'lodash';
+  import {copyToClipBoard} from '@/utils'
+  import {IQnaireModel} from "@/api/types";
 
   @Component({
     name: 'Dashboard',
@@ -163,7 +175,12 @@
       return concat(
         UserModule.myAnaire.map( i => ({...i, type: true})),
         UserModule.myQnaire.map( i => ({...i, type: false}))
-      )
+      ).sort((a: IQnaireModel, b: IQnaireModel) => {
+        return b.id - a.id
+      })
+    }
+    get getWjUrl() {
+      return process.env['VUE_APP_BASE_API'] + '/wj/' + this.formID + '?a=' + (this.formType ? '1' : '0')
     }
     createGuide() {
       this.$router.push({
@@ -209,11 +226,19 @@
         UserModule.GetUserQnaire();
       });
     }
+    handleCopyLink(link: string) {
+      copyToClipBoard(link)
+    }
+    handleOpenLink(link: string) {
+      window.open(link)
+    }
     mounted() {
       // console.log(process.env);
       UserModule.GetUserQnaire().then(() => {
-        this.formID = this.allQnaire[0].id;
-        this.formType = this.allQnaire[0].type;
+        if (this.allQnaire.length > 0) {
+          this.formID = this.allQnaire[0].id;
+          this.formType = this.allQnaire[0].type;
+        }
       });
     }
   }

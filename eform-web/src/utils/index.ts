@@ -1,3 +1,5 @@
+import {Message} from 'element-ui'
+
 // Parse the time to string
 export const parseTime = (
   time?: object | string | number,
@@ -82,6 +84,20 @@ export const toggleClass = (ele: HTMLElement, className: string) => {
   }
   ele.className = classString
 };
+
+export const copyToClipBoard = (link: string) => {
+  let transfer = document.createElement('input');
+  document.body.appendChild(transfer);
+  transfer.value = link;  // 这里表示想要复制的内容
+  transfer.focus();
+  transfer.select();
+  if (document.execCommand('copy')) {
+    document.execCommand('copy');
+  }
+  transfer.blur();
+  Message.success('链接已经复制到剪贴板了');
+  document.body.removeChild(transfer);
+}
 
 export const questionComponents = [
   'qnaire-select',
