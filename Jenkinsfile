@@ -17,6 +17,7 @@ pipeline {
         dir(path: './eform-web') {
           sh 'yarn'
           sh 'yarn build:prod'
+          sh 'ls dist'
         }
 
       }
