@@ -21,5 +21,7 @@ pipeline {
         echo '构建完成'
         sh 'ls dist'
       }
+  
+    }
   }
 }
