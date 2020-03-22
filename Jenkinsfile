@@ -15,6 +15,7 @@ pipeline {
     stage('构建') {
       steps {
         dir(path: './eform-web') {
+          sh 'yarn config set registry https://registry.npm.taobao.org'
           sh 'yarn'
           sh 'yarn build:prod'
           sh 'ls dist'
