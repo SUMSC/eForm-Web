@@ -40,7 +40,7 @@ pipeline {
             remoteConfig.identityFile = privateKeyFilePath
             stage("将构建完成的文件部署到服务器") {
               // 清除旧文件
-              sshRemove remote: remote, path: "/home/amber/eform/dist"
+              sshRemove remote: remoteConfig, path: "/home/amber/eform/dist"
               sshPut(
                 remote: remoteConfig,
                 // 本地文件或文件夹
