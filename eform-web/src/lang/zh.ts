@@ -6,6 +6,8 @@ export default {
     excel: '从Excel中生成问卷',
     editor: '编辑问卷',
     statistics: '数据统计',
+    data: '回收数据',
+    chart: '统计图表',
     icons: '图标',
     components: '组件',
     avatarUpload: '头像上传',

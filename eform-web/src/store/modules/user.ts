@@ -24,7 +24,7 @@ class User extends VuexModule implements IUserState {
   public id_tag = '';
   public name = '';
   public usertype = '';
-  public avatar = 'https://pic2.zhimg.com/v2-54e6163ce5132707169d316a2b77b48c_xl.jpg';
+  public avatar = 'https://lg-holdyu6m-1256456369.cos.ap-shanghai.myqcloud.com/%E5%A4%B4%E5%83%8F5.png';
   public roles: string[] = [];
   public myQnaire: IQnaireModel[] = [];
   public myAnswer: IAnswerModel[] = [];
@@ -106,7 +106,7 @@ class User extends VuexModule implements IUserState {
       if (!message) {
         throw Error('Verification failed, please Login again.')
       }
-      const { id_tag, name, type, my_answer } = message;
+      const { id_tag, name, type, my_answer, my_qnaire } = message;
       // roles must be a non-empty array
       // if (!roles || roles.length <= 0) {
       //   throw Error('GetUserInfo: roles must be a non-null array!')
@@ -116,6 +116,7 @@ class User extends VuexModule implements IUserState {
       this.SET_NAME(name);
       this.SET_USERTYPE(type);
       this.SET_MY_ANSWER(my_answer);
+      this.SET_MY_QNAIRE(my_qnaire);
     })
     // this.SET_AVATAR(avatar);
   }

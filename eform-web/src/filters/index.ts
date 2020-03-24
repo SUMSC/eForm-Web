@@ -26,3 +26,7 @@ export const dateNormalFormat = (str: string) => {
 export const radioValue = (i: number) => {
   return String.fromCharCode(65+i);
 };
+
+export const headerPrefix = (content: string) => {
+  return `ID：${content}`
+}

@@ -145,15 +145,27 @@ export const constantRoutes: RouteConfig[] = [
     path: '/statistics',
     component: Layout,
     redirect: '/statistics/index',
+    meta: {
+      title: 'statistics',
+      icon: 'tree-table',
+    },
     children: [
       {
         path: 'index',
         component: () => import('@/views/statistics/index.vue'),
-        name: '数据统计',
+        name: '回收数据',
         meta: {
-          title: 'statistics',
-          icon: 'tree-table',
-          noCache: true
+          title: 'data',
+          icon: 'table'
+        }
+      },
+      {
+        path: 'chart',
+        component: () => import('@/views/statistics/chart.vue'),
+        name: '统计图表',
+        meta: {
+          title: 'chart',
+          icon: 'chart'
         }
       }
     ]

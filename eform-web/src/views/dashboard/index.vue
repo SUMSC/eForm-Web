@@ -58,7 +58,7 @@
       >
         <template slot-scope="scope">
           <span>
-            {{scope.row.answer.length}} 份
+            {{scope.row.answer ? scope.row.answer.length : 0}} 份
           </span>
         </template>
       </el-table-column>
@@ -134,15 +134,14 @@
         <el-col :span="24">
           <div class="drawer-actions">
             <el-button-group>
-              <el-button type="primary">统计</el-button>
-              <el-button type="primary" @click="handleEdit({id: formID, type: formType})">编辑</el-button>
-              <el-button v-if="!currentQnaire.active" type="primary" @click="handleOpen({id: formID, type: formType})">开始回收</el-button>
-              <el-button v-else type="primary" @click="handleClose({id: formID, type: formType})">暂停回收</el-button>
+              <el-button type="primary" @click="handleStatistics({id: formID})">统计</el-button>
+              <el-button type="primary" @click="handleEdit({id: formID})">编辑</el-button>
+              <el-button v-if="!currentQnaire.active" type="primary" @click="handleOpen({id: formID})">开始回收</el-button>
+              <el-button v-else type="primary" @click="handleClose({id: formID})">暂停回收</el-button>
             </el-button-group>
           </div>
         </el-col>
       </el-row>
-
     </el-drawer>
   </div>
 </template>
@@ -154,6 +153,7 @@
   import _ from 'lodash';
   import {Message} from "element-ui";
   import {copyToClipBoard} from '@/utils'
+  import {QnaireModule} from "@/store/modules/qnaire";
 
   @Component({
     name: 'Dashboard',
@@ -164,6 +164,14 @@
     private formType = false;
     private formID = 0;
     private updateTable = true;
+    private exportFormat = '';
+    private exportOptions = [{
+      value: 'xlsx',
+      label: 'Excel 文件（.xlsx）',
+    }, {
+      value: 'csv',
+      label: 'CSV 文件（.csv）'
+    }];
     get currentQnaire() {
       if (this.formID !== 0)
         return _.find(this.qnaire, { id: this.formID });
@@ -174,7 +182,7 @@
       return UserModule.myQnaire;
     }
     get getWjUrl() {
-      return process.env['VUE_APP_BASE_API'] + '/wj/' + this.formID + '?a=' + (this.formType ? '1' : '0')
+      return process.env['VUE_APP_BASE_API'] + '/wj/' + this.formID;
     }
     createGuide() {
       this.$router.push({
@@ -226,6 +234,12 @@
     }
     handleOpenLink(link: string) {
       window.open(link)
+    }
+    handleStatistics({ id } : any) {
+      QnaireModule.SET_ID(id)
+      this.$router.push({
+        path: '/statistics/index',
+      })
     }
     mounted() {
       // console.log(process.env);

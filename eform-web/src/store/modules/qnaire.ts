@@ -1,7 +1,7 @@
-import {IFormModel, IQnaireSettingsModel} from "@/api/types";
+import {IAnswerModel, IFormModel, IQnaireSettingsModel} from "@/api/types";
 import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decorators";
 import store from '@/store';
-import {getChinaArea, getQnaireById, newQnaire, updateQnaire} from "@/api/qnaire";
+import {getAnswers, getChinaArea, getQnaireById, newQnaire, updateQnaire} from "@/api/qnaire";
 import {UserModule} from "@/store/modules/user";
 import {Vue} from "vue-property-decorator";
 
@@ -12,7 +12,8 @@ export interface IQnaireState {
   form: IFormModel[],
   type: boolean,
   settings: IQnaireSettingsModel
-  deadline: string | null
+  deadline: string | null,
+  answers: IAnswerModel[]
 }
 
 @Module({ dynamic: true,  store, name: 'qnaire'})
@@ -30,6 +31,7 @@ class Qnaire extends VuexModule implements IQnaireState {
     allow_edit: false
   }
   public deadline: string = ''
+  public answers = []
 
   @Mutation
   public SET_ID(value: number) {
@@ -90,6 +92,11 @@ class Qnaire extends VuexModule implements IQnaireState {
     this.deadline = value
   }
 
+  @Mutation
+  public SET_ANSWERS(value: any) {
+    this.answers = value
+  }
+
   @Action
   public async GetQnaire() {
     return getQnaireById(this.id).then(({ message } : any) => {
@@ -100,6 +107,7 @@ class Qnaire extends VuexModule implements IQnaireState {
       this.SET_DESCRIPTION(res.description);
       this.SET_FORM(res.form);
       this.SET_SETTINGS(res.settings)
+      return res;
     });
   }
 
@@ -133,7 +141,7 @@ class Qnaire extends VuexModule implements IQnaireState {
     return updateQnaire({
       id: this.id,
       settings: this.settings
-    })
+    });
   }
 
   @Action
@@ -141,7 +149,7 @@ class Qnaire extends VuexModule implements IQnaireState {
     return updateQnaire({
       id: this.id,
       deadline: this.deadline
-    })
+    });
   }
 
   @Action
@@ -150,7 +158,7 @@ class Qnaire extends VuexModule implements IQnaireState {
     return getChinaArea().then(res => {
       // console.log(res);
       this.SET_CHINA_AREA(res);
-    })
+    });
   }
 
   @Action
@@ -158,6 +166,15 @@ class Qnaire extends VuexModule implements IQnaireState {
     return updateQnaire({
       id: this.id,
       a: this.type
+    });
+  }
+
+  @Action
+  public GetAnswers() {
+    return getAnswers(this.id).then(({ message } : any) => {
+      this.SET_ANSWERS(message);
+    }).catch(({ response }) => {
+      if (response.data.code === 404) this.SET_ANSWERS([]);
     })
   }
 }

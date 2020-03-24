@@ -41,3 +41,12 @@ export const getChinaArea = () =>
   service({
     url: '/china_area',
   });
+
+export const getAnswers = (qnaire_id: number) =>
+  service({
+    url: '/answer',
+    method: 'GET',
+    params: {
+      qnaire_id
+    }
+  });
