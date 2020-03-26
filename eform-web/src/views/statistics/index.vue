@@ -12,10 +12,11 @@
 </template>
 
 <script lang="ts">
-
   import {Component, Vue} from "vue-property-decorator";
   import {QnaireModule} from "@/store/modules/qnaire";
   import {UserModule} from "@/store/modules/user";
+  import {exportJson2Excel, normalizedAnswers} from '@/utils/excel';
+  import _ from 'lodash';
 
   @Component({
   name: 'Statistics'
@@ -28,7 +29,18 @@ export default class extends Vue {
     return QnaireModule;
   }
   handleExport() {
-    QnaireModule.GetAnswers()
+    QnaireModule.GetAnswers().then(async () => {
+      if (_.find(this.qnaire.form, { type: 'area-picker' })) {
+        return QnaireModule.GetChinaArea();
+      }
+    }).then(() => {
+      const data = normalizedAnswers(
+        QnaireModule.answers.map((r: any) => r.answer),
+        this.qnaire.form.map(f => ({ type: f.type, name: f.name, selection: f.meta ? f.meta.selection : undefined }))
+      );
+      console.log(data)
+      exportJson2Excel(data.headers, data.body);
+    });
   }
   created() {
     if (this.qnaireId) {

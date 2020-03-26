@@ -173,6 +173,7 @@ class Qnaire extends VuexModule implements IQnaireState {
   public GetAnswers() {
     return getAnswers(this.id).then(({ message } : any) => {
       this.SET_ANSWERS(message);
+      return message;
     }).catch(({ response }) => {
       if (response.data.code === 404) this.SET_ANSWERS([]);
     })
