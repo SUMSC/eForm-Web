@@ -1,7 +1,7 @@
 import {IAnswerModel, IFormModel, IQnaireSettingsModel} from "@/api/types";
 import {Action, getModule, Module, Mutation, VuexModule} from "vuex-module-decorators";
 import store from '@/store';
-import {getAnswers, getChinaArea, getQnaireById, newQnaire, updateQnaire} from "@/api/qnaire";
+import {getAnswers, getChinaArea, getQnaireById, newQnaire, updateQnaire, getAnalysis} from "@/api/qnaire";
 import {UserModule} from "@/store/modules/user";
 import {Vue} from "vue-property-decorator";
 
@@ -13,7 +13,8 @@ export interface IQnaireState {
   type: boolean,
   settings: IQnaireSettingsModel
   deadline: string | null,
-  answers: IAnswerModel[]
+  answers: IAnswerModel[],
+  analysis: Array<any>,
 }
 
 @Module({ dynamic: true,  store, name: 'qnaire'})
@@ -29,9 +30,10 @@ class Qnaire extends VuexModule implements IQnaireState {
     only_once: false,
     shuffle_selections: false,
     allow_edit: false
-  }
-  public deadline: string = ''
-  public answers = []
+  };
+  public deadline: string = '';
+  public answers: any[] = [];
+  public analysis: any[] = [];
 
   @Mutation
   public SET_ID(value: number) {
@@ -88,6 +90,11 @@ class Qnaire extends VuexModule implements IQnaireState {
   }
 
   @Mutation
+  public SET_ANALYSIS(value: any[]) {
+    this.analysis = value;
+  }
+
+  @Mutation
   public SET_DEADLINE(value: any) {
     this.deadline = value
   }
@@ -100,13 +107,13 @@ class Qnaire extends VuexModule implements IQnaireState {
   @Action
   public async GetQnaire() {
     return getQnaireById(this.id).then(({ message } : any) => {
-      const res = message[0]
-      this.SET_TYPE(res.a)
-      this.SET_DEADLINE(res.deadline)
+      const res = message[0];
+      this.SET_TYPE(res.a);
+      this.SET_DEADLINE(res.deadline);
       this.SET_NAME(res.name);
       this.SET_DESCRIPTION(res.description);
       this.SET_FORM(res.form);
-      this.SET_SETTINGS(res.settings)
+      this.SET_SETTINGS(res.settings);
       return res;
     });
   }
@@ -176,6 +183,16 @@ class Qnaire extends VuexModule implements IQnaireState {
       return message;
     }).catch(({ response }) => {
       if (response.data.code === 404) this.SET_ANSWERS([]);
+    })
+  }
+
+  @Action
+  public GetAnalysis() {
+    return getAnalysis(this.id).then(({ message } : any) => {
+      this.SET_ANALYSIS(message);
+      return message;
+    }).catch(({ response }) => {
+      if (response.data.code === 404) this.SET_ANALYSIS([]);
     })
   }
 }

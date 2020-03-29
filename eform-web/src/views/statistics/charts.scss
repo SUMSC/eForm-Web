@@ -1,0 +1,30 @@
+.charts-container {
+  margin: 0 30px 20px;
+}
+h1 {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.charts-header_tags {
+  .el-tag {
+    margin-left: 5px;
+  }
+}
+.charts-container__main {
+  width: 800px;
+  margin: 10px auto;
+}
+.chart-title__tag {
+  margin-left: 5px;
+}
+.chart-title__name {
+  //color: #606266;
+}
+.chart-title__desc {
+  color: #909399;
+  font-size: 12px;
+}
+.chart-block__download {
+  margin-left: 20px;
+}

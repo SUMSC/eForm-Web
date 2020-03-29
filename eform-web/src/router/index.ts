@@ -160,8 +160,8 @@ export const constantRoutes: RouteConfig[] = [
         }
       },
       {
-        path: 'chart',
-        component: () => import('@/views/statistics/chart.vue'),
+        path: 'charts',
+        component: () => import('@/views/statistics/charts.vue'),
         name: '统计图表',
         meta: {
           title: 'chart',

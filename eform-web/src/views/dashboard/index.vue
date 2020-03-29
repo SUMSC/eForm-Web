@@ -236,13 +236,12 @@
       window.open(link)
     }
     handleStatistics({ id } : any) {
-      QnaireModule.SET_ID(id)
       this.$router.push({
         path: '/statistics/index',
+        query: { id: String(id) }
       })
     }
-    mounted() {
-      // console.log(process.env);
+    created() {
       UserModule.GetUserQnaire()
     }
   }

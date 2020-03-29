@@ -50,3 +50,12 @@ export const getAnswers = (qnaire_id: number) =>
       qnaire_id
     }
   });
+
+export const getAnalysis = (id: number) =>
+  service({
+    url: '/analysis',
+    method: 'GET',
+    params: {
+      id
+    }
+  });

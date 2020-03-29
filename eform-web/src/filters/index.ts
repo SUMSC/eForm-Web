@@ -28,5 +28,11 @@ export const radioValue = (i: number) => {
 };
 
 export const headerPrefix = (content: string) => {
-  return `ID：${content}`
-}
+  return `ID：${content}`;
+};
+
+export const stripLongText = (content: string) => {
+  if (content.length > 20) {
+    return content.substr(0, 20) + '……）';
+  }
+};
