@@ -9,7 +9,8 @@
     "mock": "cd mock && ts-node-dev mock-server.ts",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "svg": "vsvg -s ./src/icons/svg -t ./src/icons/components --ext ts --es6"
+    "svg": "vsvg -s ./src/icons/svg -t ./src/icons/components --ext ts --es6",
+    "cloc": "cloc . --exclude-dir=mock,node_modules,public --exclude-ext=js,json,svg,md"
   },
   "dependencies": {
     "axios": "^0.19.2",

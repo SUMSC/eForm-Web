@@ -23,7 +23,7 @@
       </span>
     </header>
     <main style="margin: 30px">
-      <el-table border stripe fit :data="answers.body">
+      <el-table border stripe fit :data="answers.body" v-loading="loading">
         <el-table-column type="index" />
         <el-table-column
           v-for="(header, i) in answers.headers"
@@ -48,6 +48,7 @@
   name: 'Statistics'
 })
 export default class extends Vue {
+  private loading = false;
   private answers : { headers : string[], body: string[][] } = {
     headers: [],
     body: []
@@ -87,6 +88,7 @@ export default class extends Vue {
     });
   }
   created() {
+    this.loading = true;
     new Promise((resolve: Function, reject: Function) => {
       if (this.queryId) {
         QnaireModule.SET_ID(parseInt(<string>this.queryId));
@@ -116,6 +118,7 @@ export default class extends Vue {
           this.qnaire.form.map(f => ({ type: f.type, name: f.name, selection: f.meta ? f.meta.selection : undefined, meta: f.meta }))
           )
       );
+      this.loading = false;
     });
   }
 }

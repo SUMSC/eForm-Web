@@ -97,7 +97,23 @@ export const copyToClipBoard = (link: string) => {
   transfer.blur();
   Message.success('链接已经复制到剪贴板了');
   document.body.removeChild(transfer);
-}
+};
+
+export const dataURLToBlob = (dataURL: string) => {
+  const arr = dataURL.split(','),
+    mime = arr[0].match(/:(.*?);/),
+    bstr = atob(arr[1]);
+  let n = bstr.length,
+    u8arr = new Uint8Array(n);
+  while (n--) u8arr[n] = bstr.charCodeAt(n);
+  return new Blob([u8arr], { type: mime ? mime[1]: '' });
+};
+
+export const blobToFile = (theBlob: any, fileName: string) => {
+  theBlob.lastModifiedDate = new Date();
+  theBlob.name = fileName;
+  return theBlob;
+};
 
 export const questionComponents = [
   'qnaire-select',
