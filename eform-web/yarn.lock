@@ -1,9 +1,0 @@
-.: --exclude-dir=1
-./.browserslistrc: language unknown (#3)
-./.editorconfig: language unknown (#3)
-./.env.development: language unknown (#3)
-./.env.production: language unknown (#3)
-./.env.staging: language unknown (#3)
-./.eslintignore: language unknown (#3)
-./.gitignore: listed in $Not_Code_Extension{gitignore}
-./yarn.lock: language unknown (#3)
