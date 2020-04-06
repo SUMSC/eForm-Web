@@ -23,6 +23,9 @@
               <template v-slot="scope" v-if="form.type === 'date-picker'">
                 {{ moment(scope.row).format((form.meta.type && form.meta.type === 'datetime') ? 'YYYY-MM-DD HH:mm:SS' : 'YYYY-MM-DD') }}
               </template>
+              <template v-slot="scope" v-else-if="form.type === 'area-picker'">
+                {{ scope.row | translateArea }}
+              </template>
               <template v-slot="scope" v-else>
                 {{ scope.row }}
               </template>
@@ -60,10 +63,11 @@ interface ICharts {
 }
 
 @Component({
-name: 'StatisticsChart'
+  name: 'StatisticsChart'
 })
 export default class extends Vue {
   private charts : ICharts = {};
+  private loading : boolean[] = [];
 
   get qnaireId() {
     return QnaireModule.id;
@@ -86,7 +90,9 @@ export default class extends Vue {
   private isTextQuestion(type: string) {
     return (type === 'qnaire-input' ||
       type === 'qnaire-textarea' ||
-      type === 'date-picker');
+      type === 'date-picker' ||
+      type === 'area-picker'
+    );
   }
   private downloadChart(i: number) {
     const dataURL = this.charts[i].getDataURL({ type: 'png' });

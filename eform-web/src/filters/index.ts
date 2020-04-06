@@ -1,4 +1,6 @@
 import moment from 'moment';
+import find from "lodash/find";
+import {QnaireModule} from '@/store/modules/qnaire';
 
 // Set utils function parseTime to filter
 export { parseTime } from '@/utils';
@@ -35,4 +37,16 @@ export const stripLongText = (content: string) => {
   if (content.length > 20) {
     return content.substr(0, 20) + '……）';
   }
+};
+
+export const translateArea = (area: Array<string>) => {
+  if (!area || !area.length) return '';
+  const province : any = find(QnaireModule.chinaArea, { value: area[0] });
+  const city : any = find(province.children, { value: area[1] });
+  let county : any = '';
+  if (area[2]) {
+    county = find(city.children, { value: area[2] });
+  }
+  console.log(province, city, county);
+  return `${province.label} / ${city.label} / ${county.label}`;
 };

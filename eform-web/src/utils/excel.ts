@@ -137,11 +137,13 @@ const cleanAnswer = (ans: any[], form: Array<{ type: string, name: string, selec
       case 'qnaire-checkbox':
         return _.join(d.map((key: number) => form[i].selection[key].value), '/');
       case 'area-picker':
+        if (!d.length) return '';
         const province = _.find(QnaireModule.chinaArea, {value: d[0]});
         const city = _.find(province.children, {value: d[1]});
         const county = _.find(city.children, {value: d[2]});
         return `${province.label}/${city.label}/${county.label}`;
       case 'qnaire-select':
+        if (!d) return d;
         return form[i].selection[d].value;
       case 'date-picker':
         if (form[i].meta && form[i].meta.type && form[i].meta.type === 'time')
