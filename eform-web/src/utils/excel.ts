@@ -143,7 +143,7 @@ const cleanAnswer = (ans: any[], form: Array<{ type: string, name: string, selec
         const county = _.find(city.children, {value: d[2]});
         return `${province.label}/${city.label}/${county.label}`;
       case 'qnaire-select':
-        if (!d) return d;
+        if (!d && d !== 0) return d;
         return form[i].selection[d].value;
       case 'date-picker':
         if (form[i].meta && form[i].meta.type && form[i].meta.type === 'time')

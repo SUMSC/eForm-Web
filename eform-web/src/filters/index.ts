@@ -47,6 +47,5 @@ export const translateArea = (area: Array<string>) => {
   if (area[2]) {
     county = find(city.children, { value: area[2] });
   }
-  console.log(province, city, county);
   return `${province.label} / ${city.label} / ${county.label}`;
 };
